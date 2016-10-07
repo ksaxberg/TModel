@@ -1,0 +1,7 @@
+Nogales, 30000
+Tucson, 980000
+Phoenix, 4300000
+Flagstaff, 140000
+Las Cruces, 213670
+Albuquerque, 904587
+Santa Fe, 148164
