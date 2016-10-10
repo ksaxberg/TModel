@@ -15,44 +15,54 @@ def gravity(pop, dist, roadData):
 		gravitys[i][j] = pop[i][0]*pop[j][0];
 	# Now run over beta values, divide by distance^beta
 	#  Dumping values into a matrix with beta, K, R^2
-	analysis = np.zeros([20,3])
+	analysis = np.zeros([20,6])
 	for beta in np.arange(0.1, 2.1, .1):
 		i = int(10*beta)
-		gravityBeta = np.copy(gravitys)
+		gravityBeta = []
+		roads = []
 		mean = 0
 		for j, k in indices:
-			gravityBeta[j][k] = gravityBeta[j][k] / (dist[j][k]**beta)
+			gravityBeta.append(gravitys[j][k] / (dist[j][k]**beta))
 			mean += roadData[j][k]
+			roads.append(roadData[j][k])
 		mean /= len(indices)
 		analysis[i-1][0] = beta;
-		analysis[i-1][1] = singleRegression(gravityBeta, roadData, indices);
-		analysis[i-1][2] = rSquared(analysis[i-1][1], roadData, gravityBeta, indices, mean);
+		analysis[i-1][1] = regressionNoIntercept(gravityBeta, roads);
+		predicted = [analysis[i-1][1]*x for x in gravityBeta]
+		analysis[i-1][2] = rSquared(predicted, roads, mean);
+		analysis[i-1][3], analysis[i-1][4] = regressionIntercept(gravityBeta, roads) 
+		predicted = [analysis[i-1][3]*x+analysis[i-1][4] for x in gravityBeta]
+		analysis[i-1][5] = rSquared(predicted, roads, mean)
 	return analysis
 		
 
-def singleRegression(gravityBeta, roadData, indices):
+def regressionNoIntercept(gravityBeta, roads):
 	# Solving the linear regression y = mx
 	#   where x = GravityEstimate
 	#         y = RoadData
 	#  This means running lstsq on x\y
-	x_values = np.zeros([len(indices), 1])	
-	y_values = np.zeros([len(indices), 1])
-
-	index = 0
-	for i,j in indices:
-		x_values[index] = gravityBeta[i][j]
-		y_values[index] = roadData[i][j]
-		index += 1
-	slope = np.linalg.lstsq(x_values,y_values)[0]
+	x_values = np.array(gravityBeta)
+	y_values = np.array(roads)
+	A = np.vstack([x_values]).T
+	slope = np.linalg.lstsq(A,y_values)[0]
 	return slope
 
-def rSquared(k, roadData, gravityBeta, indices, mean):
-	# for numpy arrays, array*array should define element by element multiplication
+def regressionIntercept(gravityBeta, roads):
+	x_values = np.array(gravityBeta)
+	y_values = np.array(roads)
+	A = np.vstack([x_values, np.ones(len(x_values))]).T
+	slope, intercept = np.linalg.lstsq(A,y_values)[0]
+	return [slope, intercept]
+	
+
+def rSquared(predicted, actual, mean):
+	# sum(predicted - actual)^2
+	# divided by sum(predicted - mean)^2
 	top = 0
 	bottom = 0
-	for i,j in indices:
-		top += (k*gravityBeta[i][j]-roadData[i][j])**2
-		bottom += (roadData[i][j] - mean)**2
+	for i in range(len(predicted)):
+		top += (predicted[i]-actual[i])**2
+		bottom += (predicted[i] - mean)**2
 	return 1-(top/bottom)
 	
 
@@ -64,7 +74,7 @@ if __name__ == '__main__':
 		dist = parseData.parseDistance(sys.argv[2]);
 		roadData = parseData.parseDistance(sys.argv[3]);
 		analysis = gravity(pop, dist, roadData);
-		print("[Beta, Slope, R^2]")
+		print("[Beta, Slope, R^2, slope, intercept, R^2]")
 		print(analysis)
 		#for i in range(20):
 		#	print("i: ",i)
