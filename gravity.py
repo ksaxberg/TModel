@@ -11,28 +11,25 @@ def gravity(pop, dist, roadData):
 			if(dist[i][j] != 0):
 				indices.append((i,j));
 	# Start with population product in gravity matrix
+	roads = []
 	for i,j in indices:
 		gravitys[i][j] = pop[i][0]*pop[j][0];
+		roads.append(roadData[i][j])
 	# Now run over beta values, divide by distance^beta
 	#  Dumping values into a matrix with beta, K, R^2
 	analysis = np.zeros([20,6])
 	for beta in np.arange(0.1, 2.1, .1):
 		i = int(10*beta)
 		gravityBeta = []
-		roads = []
-		mean = 0
 		for j, k in indices:
 			gravityBeta.append(gravitys[j][k] / (dist[j][k]**beta))
-			mean += roadData[j][k]
-			roads.append(roadData[j][k])
-		mean /= len(indices)
 		analysis[i-1][0] = beta;
 		analysis[i-1][1] = regressionNoIntercept(gravityBeta, roads);
 		predicted = [analysis[i-1][1]*x for x in gravityBeta]
-		analysis[i-1][2] = rSquared(predicted, roads, mean);
+		analysis[i-1][2] = rSquared(predicted, roads);
 		analysis[i-1][3], analysis[i-1][4] = regressionIntercept(gravityBeta, roads) 
 		predicted = [analysis[i-1][3]*x+analysis[i-1][4] for x in gravityBeta]
-		analysis[i-1][5] = rSquared(predicted, roads, mean)
+		analysis[i-1][5] = rSquared(predicted, roads)
 	return analysis
 		
 
@@ -55,11 +52,12 @@ def regressionIntercept(gravityBeta, roads):
 	return [slope, intercept]
 	
 
-def rSquared(predicted, actual, mean):
+def rSquared(predicted, actual):
 	# sum(predicted - actual)^2
 	# divided by sum(predicted - mean)^2
 	top = 0
 	bottom = 0
+	mean = sum(actual)/len(actual)
 	for i in range(len(predicted)):
 		top += (predicted[i]-actual[i])**2
 		bottom += (predicted[i] - mean)**2
