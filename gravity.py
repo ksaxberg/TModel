@@ -1,7 +1,7 @@
 # Runs a basic gravity law analysis, given the population table and distance table
 import numpy as np
-#from scipy import stats
 import pprint
+
 def formatRawMatrices(pop, dist, roadData):
 	# Returns three lists, one with the roadData name travel
 	#   one with the product of populations (beginning gravity
