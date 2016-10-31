@@ -10,7 +10,6 @@ def formatRawMatrices(pop, dist, roadData):
 	#   one with the distance data named distance
 	#   All of the lists correspond to the same matrix points
 	#   for each index of the list. 
-	gravitys = np.zeros(dist.shape);
 	dim = len(pop.keys());
 	# Find non-zero indices first, create shortlist
 	travel = []
@@ -30,18 +29,15 @@ def runGravity(travel, gravitys, distance):
 	#  Dumping values into a matrix with beta, K, R^2
 	#  after regression with the travel data. 
 	# Assuming desired regression orientation: Travel = m*Gravity + b
-	analysis = np.zeros([20,6])
+	analysis = np.zeros([20,4])
 	for beta in np.arange(0.1, 2.1, .1):
 		i = int(10*beta)
 		gravityBeta = [(gravitys[x]/(distance[x]**beta)) for x in range(len(gravitys))]
 		analysis[i-1][0] = beta;
 		#analysis[i-1][1] = regressionNoIntercept(gravityBeta, travel)
-		analysis[i-1][1] = 0 
-		predicted = [analysis[i-1][1]*x for x in gravityBeta]
-		analysis[i-1][2] = rSquared(predicted, travel)
-		analysis[i-1][3], analysis[i-1][4] = regressionIntercept(gravityBeta, travel) 
-		predicted = [(analysis[i-1][3]*x+analysis[i-1][4]) for x in gravityBeta]
-		analysis[i-1][5] = rSquared(predicted, travel)
+		analysis[i-1][1], analysis[i-1][2] = regressionIntercept(gravityBeta, travel) 
+		predicted = [(analysis[i-1][1]*x+analysis[i-1][2]) for x in gravityBeta]
+		analysis[i-1][3] = rSquared(predicted, travel)
 	return analysis
 		
 
@@ -83,5 +79,5 @@ if __name__ == '__main__':
 		roadData = parseData.parseDistance(sys.argv[3]);
 		x,y,z = formatRawMatrices(pop, dist, roadData);
 		analysis = runGravity(x,y,z);
-		print("[Beta, Slope, R^2, slope, intercept, R^2]")
+		print("[Beta, slope, intercept, R^2]")
 		pprint.pprint(analysis)
