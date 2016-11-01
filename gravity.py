@@ -80,4 +80,6 @@ if __name__ == '__main__':
 		x,y,z = formatRawMatrices(pop, dist, roadData);
 		analysis = runGravity(x,y,z);
 		print("[Beta, slope, intercept, R^2]")
-		pprint.pprint(analysis)
+		for line in analysis:
+			print("[{:.3e}, {:.3e}, {:.3e}, {:.3e}]".format(line[0],line[1],line[2],line[3]))
+		#pprint.pprint(analysis)
