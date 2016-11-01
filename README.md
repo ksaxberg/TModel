@@ -17,6 +17,6 @@ Usage:
 	python3 gravity.py ./test/population.txt ./test/distance.txt ./test/roadData.txt
 
 	This will print out a large matrix of regressions, for beta varying from 
-	.1 to 2.0 by .1 incremends
+	.1 to 2.0 by .1 increments
 	
 	The gravity.py file can also be imported to include regression analysis.
