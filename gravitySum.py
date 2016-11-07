@@ -71,7 +71,6 @@ def overLappingRoutes(distances):
 	#Have spoiler route index -1
 	#Just trying to make a collection of empty lists
 	size = len(distances[0])
-	routeOverlap = [[[] for i in range(size)] for j in range(size)]
 	# Finished collection of empty lists
 	memory = {}
 	for i in range(size):
@@ -80,8 +79,10 @@ def overLappingRoutes(distances):
 			# Sparse Matrix - run on edges, not vertex*vertex
 			# Calculates how to get from A,B for every pair.
 	 		runDijkstra(distances, i, j, memory)
+	routeOverlap = [[[] for i in range(size)] for j in range(size)]
 	for key,value in memory.items():
 		# For each consecutive pair in the path
+		# value is [S[i], PathSoFar[i]]
 		for i in range(len(value[1])-1):
 			if value[1][i] < value[1][i+1]:
 				r1 = value[1][i]
@@ -94,12 +95,28 @@ def overLappingRoutes(distances):
 			routeOverlap[r1][r2].append((key, value[0]))
 	return routeOverlap	
 
+def convertRoute(overlaps, pops, pop1, pop2, beta, alpha):
+	if( pop2 > pop1): 
+		x = pop1
+		pop1 = pop2
+		pop2 = x
+	running = 0
+	for path in overlaps[pop1][pop2]:
+		if not path:
+			continue
+		for key, value in path:
+			temp = (pops[key[0]]*pops[key[1]])**alpha
+			temp /= value**beta
+			running += temp
+	return running	
+			
+
 def convertRoutesToList(overlaps, pops, beta, alpha):
 	#Constant factor K will have to be multiplied on the size
 	partialGravities = np.zeros([len(overlaps), len(overlaps)])
 	for i, row in enumerate(overlaps):
 		for j, col in enumerate(row):
-			if col == []:
+			if not col:
 				continue
 			for x in col:
 				#For each x, add the partial gravity
@@ -128,9 +145,9 @@ def gravitySum(pop, distances, roadData):
 		partialList = formatMatrixAsList(partialGravities)
 		roadDataList = formatMatrixAsList(roadData)
 		slope, intercept = regressionIntercept(partialList, roadDataList)
-		#TODO: This does not verify the calibration, need different prediction
-		#  as have calibrated on the overlapping routes
 		#TODO: R^2 here does nothing to verify the predictive quality
+		#predicted = [slope*(convertRoute(overlap, pops, pop1, pop2, 
+		#	beta, alpha)+intercept for pop1, pop2, d in edgeList]
 		predicted = [slope*x+intercept for x in partialList]
 		r2 = rSquared(predicted, roadDataList)	
 		print("[{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.3e}]".format(beta, alpha,
@@ -145,6 +162,3 @@ if __name__ == '__main__':
 		roadData = parseData.parseDistance(sys.argv[3]);
 		x,y,z = formatRawMatrices(pop, dist, roadData);
 		gravitySum(pop, dist, roadData)
-		#analysis = runGravity(x,y,z);
-		#print("[Beta, Slope, R^2, slope, intercept, R^2]")
-		#pprint.pprint(analysis)
