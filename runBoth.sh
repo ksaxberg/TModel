@@ -7,7 +7,7 @@ fi
 
 FOLDER=$1
 echo "Running files from: $FOLDER"
-python gravity.py $FOLDER/population.txt $FOLDER/distanceEdge.txt $FOLDER/measuredDataEdge.txt > out.gravity.$FOLDER.txt
-python gravitySum.py $FOLDER/population.txt $FOLDER/distanceEdge.txt $FOLDER/measuredDataEdge.txt > out.gravitySum.$FOLDER.txt
+python gravity.py $FOLDER/population.txt $FOLDER/distanceEdge.txt $FOLDER/measuredDataEdge.txt > out.gravity.txt
+python gravitySum.py $FOLDER/population.txt $FOLDER/distanceEdge.txt $FOLDER/measuredDataEdge.txt > out.gravitySum.txt
 xdg-open Gravity.png
 xdg-open GravitySum.png
