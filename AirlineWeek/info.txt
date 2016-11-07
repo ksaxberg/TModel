@@ -1,0 +1,9 @@
+airplaneKeys.py is a translation of IATA Equipment codes to best-guess seat estimates
+
+distanceEdge.txt is an airport to airport distance measurement
+
+measuredDataEdge.txt is a compilation of flight data with translated airplane codes, so the number represents seats on the flight between the two airports.
+
+timeDistanceEdge.txt is a distance measurement based on the flight time between aiport pairs
+
+airlineWeek.txt is a collection of flights for the given week, indicated by the date value in the entries of the csv

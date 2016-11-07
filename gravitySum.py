@@ -1,4 +1,6 @@
 import sys
+from matplotlib import cm
+import matplotlib.pyplot as plt
 import pprint
 import numpy as np
 from gravity import *
@@ -29,10 +31,19 @@ def runDijkstra(distances, source, destination, memory ):
 	# S is colleciton of shortest decided distances already
 	S = {source: 0}
 	PathSoFar = {source: [source]}
-	D = {i:distances[source][i] for i in range(len(distances[0])) if distances[source][i] != 0}	
+	D = {i:distances[source][i] for i in range(len(distances[0])) 
+		if distances[source][i] != 0}	
+	# TODO:Skipping non-connected graphs....
+	if not D:
+		return
+	# End skipping
 	for key,value in D.items():
 		PathSoFar[key] = [source, key]
 	while destination not in S.keys():
+		# TODO:Skipping non-connected graphs....
+		if not D:
+			return
+		# End skipping
 		minim = min(D.values())
 		newMin = [key for key, value in D.items() if value == minim]
 		newMin = newMin[0]
@@ -137,27 +148,50 @@ def gravitySum(pop, distances, roadData):
 	overlap = overLappingRoutes(distances)
 	#Need to format into 3 lists, RoadData, Gravity, Distance
 	# All indexed in order
-	print("{}\nGravity Sum\n{}\n".format("-"*25, "-"*25))
-	print("[Beta, Alpha, Slope, Intercept, R^2]")	
-	for i in range(20):
-		beta = i/10.0
-		alpha = 1
-		partialGravities = convertRoutesToList(overlap, pop, beta, alpha)
-		partialList = formatMatrixAsList(partialGravities)
-		roadDataList = formatMatrixAsList(roadData)
-		slope, intercept = regressionIntercept(partialList, roadDataList)
-		# Calculate prediction on current pathed values
-		predicted = [slope*x+intercept for x in partialList]
-		r2 = rSquared(predicted, roadDataList)	
-		print("[{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.3e}]".format(beta, alpha,
-			 slope, intercept, r2))
+	zvalues = []
+	for alpha in np.arange(.1,1.2,0.1):
+		this_z = []
+		for beta in np.arange(.1,2.1, 0.1):
+			partialGravities = convertRoutesToList(overlap, pop, beta, alpha)
+			partialList = formatMatrixAsList(partialGravities)
+			roadDataList = formatMatrixAsList(roadData)
+			slope, intercept = regressionIntercept(partialList, roadDataList)
+			# Calculate prediction on current pathed values
+			predicted = [slope*x+intercept for x in partialList]
+			r2 = rSquared(predicted, roadDataList)	
+			this_z.append(r2)
+			print("{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.3e}".format(beta, alpha,
+				 slope, intercept, r2))
+		zvalues.append(this_z)
+	
+	xval = np.arange(.1, 2.1, .1)
+	yval = np.arange(.1, 1.2, .1)
+	fig = plt.figure()
+	ax = fig.add_subplot(111)
+	CS = ax.contourf(xval, yval, zvalues, cmap=cm.coolwarm, vmin=0, vmax=1.0 )
+	ax.set_xlabel('Beta')
+	ax.set_ylabel('Alpha')
+	plt.colorbar(CS)
+	fig.savefig('GravitySum.png', bbox_inches='tight')
+	#plt.show()
 
 if __name__ == '__main__':
 	import sys
 	import parseData
 	if(len(sys.argv)==4  ):
-		pop = parseData.parsePopulation(sys.argv[1]);
-		dist = parseData.parseDistance(sys.argv[2]);
-		roadData = parseData.parseDistance(sys.argv[3]);
-		x,y,z = formatRawMatrices(pop, dist, roadData);
+		# Matrix Form
+		#pop = parseData.parsePopulation(sys.argv[1])
+		#dist = parseData.parseDistance(sys.argv[2])
+		#roadData = parseData.parseDistance(sys.argv[3])
+		#gravitySum(pop, dist, roadData)
+			
+		# Edgewise Form, simply builds matrices for now
+		# TODO: switch edgewise matrix conversionto run calculations on edges
+		pop = parseData.parsePopulation(sys.argv[1])
+		keys = parseData.makeKeys(sys.argv[1])
+		dist = parseData.parseEdges(sys.argv[2], keys)
+		roadData = parseData.parseEdges(sys.argv[3], keys)
+		x,y,z = formatRawMatrices(pop, dist, roadData)
+		print("{}\nGravity Sum\n{}\n".format("-"*25, "-"*25))
+		print("Beta, Alpha, Slope, Intercept, R^2")	
 		gravitySum(pop, dist, roadData)

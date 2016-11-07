@@ -1,5 +1,7 @@
 # Runs a basic gravity law analysis, given the population table and distance table
 import numpy as np
+from matplotlib import cm
+import matplotlib.pyplot as plt
 import sys
 import parseData
 
@@ -71,13 +73,38 @@ def rSquared(predicted, actual):
 	
 if __name__ == '__main__':
 	if(len(sys.argv) == 4):
-		pop = parseData.parsePopulation(sys.argv[1]);
-		dist = parseData.parseDistance(sys.argv[2]);
-		roadData = parseData.parseDistance(sys.argv[3]);
+		# Matrix Form
+		#pop = parseData.parsePopulation(sys.argv[1]);
+		#dist = parseData.parseDistance(sys.argv[2]);
+		#roadData = parseData.parseDistance(sys.argv[3]);
+		# Edgewise form
+		pop = parseData.parsePopulation(sys.argv[1])
+		keys = parseData.makeKeys(sys.argv[1])
+		dist = parseData.parseEdges(sys.argv[2], keys)
+		roadData = parseData.parseEdges(sys.argv[3], keys)
 		x,y,z = formatRawMatrices(pop, dist, roadData);
 		print("{}\nGravity\n{}\n".format("-"*25, "-"*25))
-		analysis = runGravity(x,y,z, .2);
-		print("[Beta, alpha, slope, intercept, R^2]")
-		for line in analysis:
-			print("[{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.3e}]".format(
+		print("Beta, alpha, slope, intercept, R^2")
+		zvalues = []
+		for a in range(1,12):
+			analysis = runGravity(x,y,z,a/10.0);
+			this_z = []
+			for line in analysis:
+				this_z.append(line[4])
+				print("{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.3e}".format(
 				line[0],line[1],line[2],line[3],line[4]))
+			zvalues.append(this_z)
+		#Build a plot of the z values
+		xval = np.arange(.1, 2.1, .1)
+		yval = np.arange(.1, 1.2, .1)
+
+		fig = plt.figure()
+		ax = fig.add_subplot(111)
+		CS = plt.contourf(xval, yval, zvalues, cmap=cm.coolwarm, vmin=0, vmax=1.0 )
+		
+		ax.set_xlabel('Beta')
+		ax.set_ylabel('Alpha')
+		plt.title('Basic Gravity Regression')
+		plt.colorbar(CS)
+		fig.savefig('Gravity.png', bbox_inches='tight')
+		#plt.show()
