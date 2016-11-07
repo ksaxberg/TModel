@@ -1,9 +1,12 @@
 # Runs a basic gravity law analysis, given the population table and distance table
 import numpy as np
 from matplotlib import cm
+from matplotlib import colors
+from matplotlib import colorbar
 import matplotlib.pyplot as plt
 import sys
 import parseData
+import constants
 
 def formatRawMatrices(pop, dist, roadData):
 	# Returns three lists, one with the roadData name travel
@@ -32,29 +35,17 @@ def runGravity(travel, gravitys, distance, alpha=1):
 	#  Dumping values into a matrix with beta, K, R^2
 	#  after regression with the travel data. 
 	# Assuming desired regression orientation: Travel = m*Gravity + b
-	analysis = np.zeros([20,5])
-	for beta in np.arange(0.1, 2.1, .1):
+	analysis = np.zeros([int(10*constants.betaMax-constants.betaMin),5])
+	for beta in np.arange(constants.betaMin, constants.betaMax, .1):
 		i = int(10*beta)
 		gravityBeta = [(gravitys[x]**alpha/(distance[x]**beta)) for x in range(len(gravitys))]
 		analysis[i-1][0] = beta;
 		analysis[i-1][1] = alpha;
-		#analysis[i-1][1] = regressionNoIntercept(gravityBeta, travel)
 		analysis[i-1][2], analysis[i-1][3] = regressionIntercept(gravityBeta, travel) 
 		predicted = [(analysis[i-1][2]*x+analysis[i-1][3]) for x in gravityBeta]
 		analysis[i-1][4] = rSquared(predicted, travel)
 	return analysis
 		
-
-def regressionNoIntercept(gravityBeta, travel):
-	# Solving the linear regression y = mx
-	#   where x = GravityEstimate
-	#         y = RoadData
-	#  This means running lstsq on x\y
-	x_values = np.array(gravityBeta)
-	y_values = np.array(travel)
-	A = np.vstack([x_values]).T
-	slope = np.linalg.lstsq(A,y_values)[0]
-	return slope
 
 def regressionIntercept(x, y):
 	x_values = np.array(x)
@@ -67,9 +58,9 @@ def rSquared(predicted, actual):
 	# sum(predicted - actual)^2
 	# divided by sum(predicted - mean)^2
 	mean = sum(actual)/len(actual)
-	SSTO = sum([(actual[i] - mean)**2 for i in range(len(predicted))])
-	SSR = sum([(predicted[i]-mean)**2 for i in range(len(predicted))])
-	return SSR/SSTO
+	meanError = sum([(actual[i] - mean)**2 for i in range(len(predicted))])
+	sqrError = sum([(predicted[i]-actual[i])**2 for i in range(len(predicted))])
+	return 1-sqrError/meanError
 	
 if __name__ == '__main__':
 	if(len(sys.argv) == 4):
@@ -86,8 +77,8 @@ if __name__ == '__main__':
 		print("{}\nGravity\n{}\n".format("-"*25, "-"*25))
 		print("Beta, alpha, slope, intercept, R^2")
 		zvalues = []
-		for a in range(1,12):
-			analysis = runGravity(x,y,z,a/10.0);
+		for alpha in np.arange(constants.alphaMin, constants.alphaMax, .1):
+			analysis = runGravity(x,y,z,alpha);
 			this_z = []
 			for line in analysis:
 				this_z.append(line[4])
@@ -95,16 +86,19 @@ if __name__ == '__main__':
 				line[0],line[1],line[2],line[3],line[4]))
 			zvalues.append(this_z)
 		#Build a plot of the z values
-		xval = np.arange(.1, 2.1, .1)
-		yval = np.arange(.1, 1.2, .1)
+		xval = np.arange(constants.betaMin, constants.betaMax, .1)
+		yval = np.arange(constants.alphaMin, constants.alphaMax, .1)
 
-		fig = plt.figure()
-		ax = fig.add_subplot(111)
-		CS = plt.contourf(xval, yval, zvalues, cmap=cm.coolwarm, vmin=0, vmax=1.0 )
-		
+		#fig = plt.figure()
+		#ax = fig.add_subplot(111)
+		fig, ax = plt.subplots(1,1,)
+		norm = colors.Normalize(0, 1.05)
+		cmap = cm.get_cmap('coolwarm', 10)
+		CS = ax.contourf(xval, yval, zvalues, np.arange(0,1.05, .05), 
+				cmap=cmap, norm=norm,  vmin=0, vmax=1.05)
 		ax.set_xlabel('Beta')
 		ax.set_ylabel('Alpha')
-		plt.title('Basic Gravity Regression')
-		plt.colorbar(CS)
+		plt.title('Basic Gravity Regression Values')
+		plt.colorbar(CS,)
 		fig.savefig('Gravity.png', bbox_inches='tight')
 		#plt.show()

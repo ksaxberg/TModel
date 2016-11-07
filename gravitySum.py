@@ -1,10 +1,13 @@
 import sys
 from matplotlib import cm
+from matplotlib import colors
+from matplotlib import colorbar
 import matplotlib.pyplot as plt
 import pprint
 import numpy as np
 from gravity import *
 import math
+import constants
 DEBUG = True
 
 def formatMatrixAsList(someMatrix):
@@ -149,9 +152,9 @@ def gravitySum(pop, distances, roadData):
 	#Need to format into 3 lists, RoadData, Gravity, Distance
 	# All indexed in order
 	zvalues = []
-	for alpha in np.arange(.1,1.2,0.1):
+	for alpha in np.arange(constants.alphaMin,constants.alphaMax,0.1):
 		this_z = []
-		for beta in np.arange(.1,2.1, 0.1):
+		for beta in np.arange(constants.betaMin,constants.betaMax, 0.1):
 			partialGravities = convertRoutesToList(overlap, pop, beta, alpha)
 			partialList = formatMatrixAsList(partialGravities)
 			roadDataList = formatMatrixAsList(roadData)
@@ -164,14 +167,17 @@ def gravitySum(pop, distances, roadData):
 				 slope, intercept, r2))
 		zvalues.append(this_z)
 	
-	xval = np.arange(.1, 2.1, .1)
-	yval = np.arange(.1, 1.2, .1)
-	fig = plt.figure()
-	ax = fig.add_subplot(111)
-	CS = ax.contourf(xval, yval, zvalues, cmap=cm.coolwarm, vmin=0, vmax=1.0 )
+	yval = np.arange(constants.alphaMin,constants.alphaMax, .1)
+	xval = np.arange(constants.betaMin,constants.betaMax, .1)
+	fig, ax = plt.subplots(1,1,)
+	norm = colors.Normalize(0, 1.05)
+	cmap = cm.get_cmap('coolwarm', 10)
+	CS = ax.contourf(xval, yval, zvalues, np.arange(0,1.05, .05), 
+			cmap=cmap, norm=norm,  vmin=0, vmax=1.05)
 	ax.set_xlabel('Beta')
 	ax.set_ylabel('Alpha')
-	plt.colorbar(CS)
+	plt.title('Gravity Sums Regression Values')
+	plt.colorbar(CS,)
 	fig.savefig('GravitySum.png', bbox_inches='tight')
 	#plt.show()
 
