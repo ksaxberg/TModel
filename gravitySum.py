@@ -120,6 +120,7 @@ def gravitySum(pop, distances, roadData):
 	overlap = overLappingRoutes(distances)
 	#Need to format into 3 lists, RoadData, Gravity, Distance
 	# All indexed in order
+	print("{}\nGravity Sum\n{}\n".format("-"*25, "-"*25))
 	print("[Beta, Alpha, Slope, Intercept, R^2]")	
 	for i in range(20):
 		beta = i/10.0
@@ -128,9 +129,7 @@ def gravitySum(pop, distances, roadData):
 		partialList = formatMatrixAsList(partialGravities)
 		roadDataList = formatMatrixAsList(roadData)
 		slope, intercept = regressionIntercept(partialList, roadDataList)
-		#TODO: This does not verify the calibration, need different prediction
-		#  as have calibrated on the overlapping routes
-		#TODO: R^2 here does nothing to verify the predictive quality
+		# Calculate prediction on current pathed values
 		predicted = [slope*x+intercept for x in partialList]
 		r2 = rSquared(predicted, roadDataList)	
 		print("[{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.3e}]".format(beta, alpha,

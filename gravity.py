@@ -76,6 +76,7 @@ if __name__ == '__main__':
 		roadData = parseData.parseDistance(sys.argv[3]);
 		x,y,z = formatRawMatrices(pop, dist, roadData);
 		analysis = runGravity(x,y,z);
+		print("{}\nGravity\n{}\n".format("-"*25, "-"*25))
 		print("[Beta, alpha, slope, intercept, R^2]")
 		for line in analysis:
 			print("[{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.3e}]".format(
