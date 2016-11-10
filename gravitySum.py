@@ -1,13 +1,9 @@
 import sys
-from matplotlib import cm
-from matplotlib import colors
-from matplotlib import colorbar
-import matplotlib.pyplot as plt
 import pprint
 import numpy as np
 from gravity import *
-import math
-import constants
+import common
+import parseData
 DEBUG = True
 
 def formatMatrixAsList(someMatrix):
@@ -142,48 +138,35 @@ def convertRoutesToList(overlaps, pops, beta, alpha):
 
 def gravitySum(pop, distances, roadData):
 	#Making the distance matrix symmetric
-	for i in range(len(distances)):
-		for j in range(len(distances)):
-			if (distances[i][j] == 0) and (distances[j][i] != 0):
-				distances[i][j] = distances[j][i]
-			if (distances[j][i] == 0) and (distances[i][j] != 0):
-				distances[j][i] = distances[i][j]
+	# Should already be upper triangular, wrote overlap to not care about lower half
+	#for i in range(len(distances)):
+	#	for j in range(len(distances)):
+	#		if (distances[i][j] == 0) and (distances[j][i] != 0):
+	#			distances[i][j] = distances[j][i]
+	#		if (distances[j][i] == 0) and (distances[i][j] != 0):
+	#			distances[j][i] = distances[i][j]
 	overlap = overLappingRoutes(distances)
 	#Need to format into 3 lists, RoadData, Gravity, Distance
 	# All indexed in order
 	zvalues = []
-	for alpha in np.arange(constants.alphaMin,constants.alphaMax,0.1):
+	for alpha in common.alphaIterate():
 		this_z = []
-		for beta in np.arange(constants.betaMin,constants.betaMax, 0.1):
+		for beta in common.betaIterate():
 			partialGravities = convertRoutesToList(overlap, pop, beta, alpha)
 			partialList = formatMatrixAsList(partialGravities)
 			roadDataList = formatMatrixAsList(roadData)
-			slope, intercept = regressionIntercept(partialList, roadDataList)
+			slope, intercept = common.regressionIntercept(partialList, roadDataList)
 			# Calculate prediction on current pathed values
 			predicted = [slope*x+intercept for x in partialList]
-			r2 = rSquared(predicted, roadDataList)	
+			r2 = common.rSquared(predicted, roadDataList)	
 			this_z.append(r2)
 			print("{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.3e}".format(beta, alpha,
 				 slope, intercept, r2))
 		zvalues.append(this_z)
 	
-	yval = np.arange(constants.alphaMin,constants.alphaMax, .1)
-	xval = np.arange(constants.betaMin,constants.betaMax, .1)
-	fig, ax = plt.subplots(1,1,)
-	norm = colors.Normalize(0, 1.05)
-	cmap = cm.get_cmap('coolwarm', 10)
-	CS = ax.contourf(xval, yval, zvalues, np.arange(0,1.05, .05), 
-			cmap=cmap, norm=norm,  vmin=0, vmax=1.05)
-	ax.set_xlabel('Beta')
-	ax.set_ylabel('Alpha')
-	plt.title('Gravity Sums Regression Values')
-	plt.colorbar(CS,)
-	fig.savefig('GravitySum.png', bbox_inches='tight')
-	#plt.show()
+	common.makePlot(zvalues, 'GravitySum', 'Gravity Sum R^2 Values')
 
 if __name__ == '__main__':
-	import sys
-	import parseData
 	if(len(sys.argv)==4  ):
 		# Matrix Form
 		#pop = parseData.parsePopulation(sys.argv[1])
@@ -197,7 +180,7 @@ if __name__ == '__main__':
 		keys = parseData.makeKeys(sys.argv[1])
 		dist = parseData.parseEdges(sys.argv[2], keys)
 		roadData = parseData.parseEdges(sys.argv[3], keys)
-		x,y,z = formatRawMatrices(pop, dist, roadData)
+		#x,y,z = formatRawMatrices(pop, dist, roadData)
 		print("{}\nGravity Sum\n{}\n".format("-"*25, "-"*25))
 		print("Beta, Alpha, Slope, Intercept, R^2")	
 		gravitySum(pop, dist, roadData)
