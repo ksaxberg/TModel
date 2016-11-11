@@ -6,11 +6,11 @@ import numpy as np
 import math
 
 alphaMin = 0.1
-alphaMax = 2
+alphaMax = 3
 betaMin = 0.1
-betaMax = 1
-stepValueAlpha = 0.1
-stepValueBeta = stepValueAlpha
+betaMax = 3
+stepValueAlpha = 0.05
+stepValueBeta = 0.05
 
 
 def alphaIterate():
@@ -62,7 +62,7 @@ def makePlot(z, name="img", title=""):
     yval = alphaIterate()
     fig, ax = plt.subplots(1, 1, )
     norm = colors.Normalize(0, 1.01)
-    cmap = cm.get_cmap('inferno', 100)
+    cmap = cm.get_cmap('nipy_spectral', 100)
     # arange of the following is partial setup for colorbar
     CS = ax.contourf(xval, yval, z, np.arange(0, 1.01, .01),
                      cmap=cmap, norm=norm,  vmin=0, vmax=1.01)
