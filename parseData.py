@@ -21,7 +21,7 @@ def parseDistance(filename):
     return matrix
 
 
-def parseEdges(filename, keys, sumValues=True):
+def parseEdges(filename, keys, sumValues=False):
     """ Parses Edges file into numpy matrix
 
     Takes an edge-wise file representation of data, and using a keyset
@@ -43,9 +43,9 @@ def parseEdges(filename, keys, sumValues=True):
             # Make ind1 the smaller, upper triang matrix
             if ind1 > ind2:
                 ind1, ind2 = ind2, ind1
-            if sumValues and matrix[ind1][ind2] == 0:
+            if not sumValues and matrix[ind1][ind2] == 0:
                 matrix[ind1][ind2] = float(value.strip())
-            elif not sumValues:
+            elif sumValues:
                 matrix[ind1][ind2] += float(value.strip())
     return matrix
 

@@ -39,7 +39,6 @@ def runDijkstra(distances, source, destination, memory):
     # Skipping non-connected graphs, where no path from source
     if not D:
         return
-    # End skipping
     for key, value in D.items():
         PathSoFar[key] = [source, key]
     while destination not in S.keys():
@@ -177,8 +176,7 @@ def gravitySum(pop, distances, roadData):
     common.makePlot(zvalues, 'GravitySum', 'Gravity Sum R^2 Values')
 
 
-if __name__ == '__main__':
-    if (len(sys.argv) == 4):
+if __name__ == '__main__' and (len(sys.argv) == 4):
         # Matrix Form
         # pop = parseData.parsePopulation(sys.argv[1])
         # dist = parseData.parseDistance(sys.argv[2])
@@ -190,7 +188,6 @@ if __name__ == '__main__':
         keys = parseData.makeKeys(sys.argv[1])
         dist = parseData.parseEdges(sys.argv[2], keys)
         roadData = parseData.parseEdges(sys.argv[3], keys)
-        # x,y,z = formatRawMatrices(pop, dist, roadData)
         print("{}\nGravity Sum\n{}\n".format("-"*25, "-"*25))
         print("Beta, Alpha, Slope, Intercept, R^2")
         gravitySum(pop, dist, roadData)
