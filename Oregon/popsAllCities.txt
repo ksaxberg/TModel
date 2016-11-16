@@ -1,0 +1,11 @@
+Portland, 583776
+Salem, 154637
+Eugene, 156185
+Gresham, 105594
+Hillsboro, 91611
+Beaverton, 89803
+Bend, 76639
+Medford, 74907
+Springfield, 59403
+Corvallis, 54462
+Albany, 50158

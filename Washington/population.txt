@@ -1,0 +1,19 @@
+Auburn, 76347
+Bellevue, 122363
+Bellingham, 80885
+Everett, 103019
+Federal Way, 89306
+Kennewick, 73917
+Kent, 92411
+Lakewood, 58163
+Marysville, 60020
+Pasco, 59781
+Redmond, 54144
+Renton, 90927
+Seattle, 608660
+Shoreline, 53007
+Spokane, 208916
+Spokane Valley, 89755
+Tacoma, 198397
+Vancouver, 161791
+Yakima, 91067

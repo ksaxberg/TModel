@@ -1,0 +1,8 @@
+Portland, Salem, 47.7
+Salem, Albany, 25.8
+Albany, Eugene, 44.5
+Eugene, Medford, 166
+Medford, Bend, 173
+Albany, Bend, 125
+Salem, Bend, 132
+Portland, Bend, 162
