@@ -21,7 +21,7 @@ def parseDistance(filename):
     return matrix
 
 
-def parseEdges(filename, keys, sumValues=False):
+def parseEdges(filename, keys, sumValues=True):
     """ Parses Edges file into numpy matrix
 
     Takes an edge-wise file representation of data, and using a keyset

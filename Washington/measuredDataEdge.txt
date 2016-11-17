@@ -1,0 +1,9 @@
+Bellingham, Everett, 62000
+Everett, Seattle, 178000
+Seattle, Tacoma, 203000
+Tacoma, Vancouver, 43000
+Seattle, Yakima, 32000
+Vancouver, Yakima, 3800
+Yakima, Pasco, 19000
+Pasco, Spokane, 7900
+Yakima, Spokane, 11000

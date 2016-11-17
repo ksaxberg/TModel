@@ -6,11 +6,11 @@ import numpy as np
 import math
 
 alphaMin = 0.1
-alphaMax = 3
-betaMin = 0.1
+alphaMax = 10
+betaMin = .1 
 betaMax = 3
-stepValueAlpha = 0.05
-stepValueBeta = 0.05
+stepValueAlpha = 0.1
+stepValueBeta = 0.1
 
 
 def alphaIterate():

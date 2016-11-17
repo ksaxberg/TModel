@@ -1,4 +1,5 @@
 import sys
+import math
 import pprint
 import numpy as np
 from gravity import *
@@ -165,15 +166,21 @@ def gravitySum(pop, distances, roadData):
             partialList = [x for x in partialGravities.flat if (x != 0)]
             # partialList = formatMatrixAsList(partialGravities)
             # roadDataList = formatMatrixAsList(roadData)
+
+            # Remove the common factor, reducing numerical error
+            factor = min([math.log(j, 10) for j in partialList])
+            partialList = [j/(10**factor) for j in partialList]
+
             slope, intercept = common.linRegress(partialList, roadDataList)
             # Calculate prediction on current pathed values
             predicted = [slope*x + intercept for x in partialList]
             r2 = common.rSquared(predicted, roadDataList)
             this_z.append(r2)
+            slope = slope / (10**factor)
             print("{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.3e}".format(beta, alpha,
                   slope, intercept, r2))
         zvalues.append(this_z)
-    common.makePlot(zvalues, 'GravitySum', 'Gravity Sum R^2 Values')
+    common.makePlot(zvalues, 'GravitySum', '{} Gravity Sum R^2 Values'.format(sys.argv[1].split('/')[0]))
 
 
 if __name__ == '__main__' and (len(sys.argv) == 4):
