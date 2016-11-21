@@ -69,13 +69,18 @@ if __name__ == '__main__' and len(sys.argv) == 4:
 
     print("{}\nGravity\n{}\n".format("-"*25, "-"*25))
     print("Beta, alpha, slope, intercept, R^2")
-    zvalues = []
+    r2values = []
+    interceptValues = []
     for alpha in common.alphaIterate():
         analysis = runGravity(roadDataList, gravityList, distList, alpha)
-        this_z = []
+        this_r2 = []
+        this_intercept = []
         for line in analysis:
-            this_z.append(line[4])
+            this_r2.append(line[4])
+            this_intercept.append(math.log(abs(line[3]), 10))
             print("{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.3e}".format(
                   line[0], line[1], line[2], line[3], line[4]))
-        zvalues.append(this_z)
-    common.makePlot(zvalues, 'Gravity', '{} Basic Gravity R^2 Values'.format(sys.argv[1].split('/')[0]))
+        r2values.append(this_r2)
+        interceptValues.append(this_intercept)
+    common.makePlot(roadDataList, r2values, interceptValues, 'Gravity', 
+                    '{} Basic Gravity'.format(sys.argv[1].split('/')[0]))

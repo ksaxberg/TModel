@@ -1,13 +1,14 @@
 from matplotlib import cm
 from matplotlib import colors
 from matplotlib import colorbar
+from matplotlib import gridspec
 import matplotlib.pyplot as plt
 import numpy as np
 import math
 
 alphaMin = 0.1
-alphaMax = 10
-betaMin = .1 
+alphaMax = 3
+betaMin = 0.1 
 betaMax = 3
 stepValueAlpha = 0.1
 stepValueBeta = 0.1
@@ -52,26 +53,86 @@ def linRegress(x, y):
     return slope, intercept
 
 
-def makePlot(z, name="img", title=""):
+def makePlot(roadDataList, z, intercept, name="img", titleString=""):
     """ Makes a countour plot and saves to the specified filename
 
     File will be saved into current directory as a png, input matrix z must
     be of the size [xval, yval] as indicated
     """
+    fig = plt.figure()
+    gs = gridspec.GridSpec(3, 4)
+    box1 = fig.add_subplot(gs[0,:])
+    box1.boxplot(roadDataList, 0, 'rs', 0)
+    box1.set_xlabel('Traffic Data Range')
+
     xval = betaIterate()
     yval = alphaIterate()
-    fig, ax = plt.subplots(1, 1, )
+    sub1 = fig.add_subplot(gs[1:,0:2])
     norm = colors.Normalize(0, 1.01)
     cmap = cm.get_cmap('nipy_spectral', 100)
     # arange of the following is partial setup for colorbar
-    CS = ax.contourf(xval, yval, z, np.arange(0, 1.01, .01),
+    CS = sub1.contourf(xval, yval, z, np.arange(0, 1.01, .01),
                      cmap=cmap, norm=norm,  vmin=0, vmax=1.01)
-    ax.set_xlabel('Beta')
-    ax.set_ylabel('Alpha')
-    if title:
-        plt.title(title)
-    plt.colorbar(CS,)
+    sub1.set_xlabel('Beta')
+    sub1.set_ylabel('Alpha')
+    if titleString:
+        sub1.set_title(titleString+'\n R^2 Values')
+    plt.colorbar(CS, )
+
+    sub2 = fig.add_subplot(gs[1:,2:])
+
+    norm = colors.Normalize(0, 10)
+    cmap = cm.get_cmap('nipy_spectral', 20)
+    # arange of the following is partial setup for colorbar
+    CS = sub2.contourf(xval, yval, intercept, np.arange(0, 10, 1),
+                     cmap=cmap, norm=norm,  vmin=0, vmax=10)
+    sub2.set_xlabel('Beta')
+    sub2.set_ylabel('Alpha')
+    if titleString:
+        sub2.set_title(titleString+'\n Intercept Values log10')
+    plt.colorbar(CS, )
+
+    gs.update(wspace=1.5, hspace=1.5)
     if name[-4:] != '.png':
-        fig.savefig(name+'.png', bbox_inches='tight')
+        #fig.savefig(name+'.png', bbox_inches='tight')
+        fig.savefig(name+'.png')
     else:
         fig.savefig(name, bbox_inches='tight')
+
+
+    #box1 = fig.add_subplot(221)
+    #box1.boxplot(roadDataList, 0, 'rs', 0)
+    #box1.set_xlabel('Traffic Data Range')
+
+    #xval = betaIterate()
+    #yval = alphaIterate()
+    #sub1 = fig.add_subplot(222)
+    #norm = colors.Normalize(0, 1.01)
+    #cmap = cm.get_cmap('nipy_spectral', 100)
+    ## arange of the following is partial setup for colorbar
+    #CS = sub1.contourf(xval, yval, z, np.arange(0, 1.01, .01),
+    #                 cmap=cmap, norm=norm,  vmin=0, vmax=1.01)
+    #sub1.set_xlabel('Beta')
+    #sub1.set_ylabel('Alpha')
+    #if titleString:
+    #    sub1.set_title(titleString+' R^2 Values')
+    #plt.colorbar(CS, )
+
+    #sub2 = fig.add_subplot(223)
+
+    #norm = colors.Normalize(0, 10)
+    #cmap = cm.get_cmap('nipy_spectral', 20)
+    ## arange of the following is partial setup for colorbar
+    #CS = sub2.contourf(xval, yval, intercept, np.arange(0, 10, 1),
+    #                 cmap=cmap, norm=norm,  vmin=0, vmax=10)
+    #sub2.set_xlabel('Beta')
+    #sub2.set_ylabel('Alpha')
+    #if titleString:
+    #    sub2.set_title(titleString+' Intercept Values log10')
+    #plt.colorbar(CS, )
+
+    #if name[-4:] != '.png':
+    #    #fig.savefig(name+'.png', bbox_inches='tight')
+    #    fig.savefig(name+'.png')
+    #else:
+    #    fig.savefig(name, bbox_inches='tight')

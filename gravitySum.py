@@ -158,9 +158,11 @@ def gravitySum(pop, distances, roadData):
     # Need to format into 3 lists, RoadData, Gravity, Distance
     # All indexed in order
     roadDataList = [x for x in roadData.flat if (x != 0)]
-    zvalues = []
+    r2values = []
+    interceptValues = []
     for alpha in common.alphaIterate():
-        this_z = []
+        this_r2 = []
+        this_intercept = []
         for beta in common.betaIterate():
             partialGravities = convertRoutesToList(overlap, pop, beta, alpha)
             partialList = [x for x in partialGravities.flat if (x != 0)]
@@ -173,14 +175,16 @@ def gravitySum(pop, distances, roadData):
 
             slope, intercept = common.linRegress(partialList, roadDataList)
             # Calculate prediction on current pathed values
+            this_intercept.append(math.log(abs(intercept), 10))
             predicted = [slope*x + intercept for x in partialList]
             r2 = common.rSquared(predicted, roadDataList)
-            this_z.append(r2)
+            this_r2.append(r2)
             slope = slope / (10**factor)
             print("{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.3e}".format(beta, alpha,
                   slope, intercept, r2))
-        zvalues.append(this_z)
-    common.makePlot(zvalues, 'GravitySum', '{} Gravity Sum R^2 Values'.format(sys.argv[1].split('/')[0]))
+        r2values.append(this_r2)
+        interceptValues.append(this_intercept)
+    common.makePlot(roadDataList, r2values, interceptValues, 'GravitySum', '{} Gravity Sum'.format(sys.argv[1].split('/')[0]))
 
 
 if __name__ == '__main__' and (len(sys.argv) == 4):
