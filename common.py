@@ -54,7 +54,7 @@ def linRegress(x, y):
 
 
 def makePlot(roadDataList, z, intercept, name="img", titleString=""):
-    """ Makes a countour plot and saves to the specified filename
+    """ Makes two countour plots, box plot and saves to the specified filename
 
     File will be saved into current directory as a png, input matrix z must
     be of the size [xval, yval] as indicated
