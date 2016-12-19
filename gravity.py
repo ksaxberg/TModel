@@ -45,6 +45,22 @@ def runGravity(travel, gravitys, distance, alpha=1):
         M[i][4] = common.rSquared(predicted, travel)
     return M
 
+def gravityOnEverything(pop, keys, distMatrix, distList, roadDataList):
+    gravityList = formatRawMatrices(pop, distMatrix)
+    
+    r2values = []
+    interceptValues = []
+    for alpha in common.alphaIterate():
+        analysis = runGravity(roadDataList, gravityList, distList, alpha)
+        this_r2 = []
+        this_intercept = []
+        for line in analysis:
+            this_r2.append(line[4])
+            this_intercept.append(math.log(abs(line[3]), 10))
+        r2values.append(this_r2)
+        interceptValues.append(this_intercept)
+    return [r2values, interceptValues]
+
 
 if __name__ == '__main__' and len(sys.argv) == 4:
     """

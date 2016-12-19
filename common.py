@@ -100,39 +100,77 @@ def makePlot(roadDataList, z, intercept, name="img", titleString=""):
         fig.savefig(name, bbox_inches='tight')
 
 
-    #box1 = fig.add_subplot(221)
-    #box1.boxplot(roadDataList, 0, 'rs', 0)
-    #box1.set_xlabel('Traffic Data Range')
+def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleString=""):
+    """ Makes four countour plots, box plot and saves to the specified filename
 
-    #xval = betaIterate()
-    #yval = alphaIterate()
-    #sub1 = fig.add_subplot(222)
-    #norm = colors.Normalize(0, 1.01)
-    #cmap = cm.get_cmap('nipy_spectral', 100)
-    ## arange of the following is partial setup for colorbar
-    #CS = sub1.contourf(xval, yval, z, np.arange(0, 1.01, .01),
-    #                 cmap=cmap, norm=norm,  vmin=0, vmax=1.01)
-    #sub1.set_xlabel('Beta')
-    #sub1.set_ylabel('Alpha')
-    #if titleString:
-    #    sub1.set_title(titleString+' R^2 Values')
-    #plt.colorbar(CS, )
+    File will be saved into current directory as a png, input matrix z must
+    be of the size [xval, yval] as indicated
+    """
+    fig = plt.figure()
+    gs = gridspec.GridSpec(6, 4)
+    box1 = fig.add_subplot(gs[0,:])
+    box1.boxplot(roadDataList, 0, 'rs', 0)
+    box1.set_xlabel('Traffic Data Range')
 
-    #sub2 = fig.add_subplot(223)
+    xval = betaIterate()
+    yval = alphaIterate()
+    sub1 = fig.add_subplot(gs[1:3,0:2])
+    norm = colors.Normalize(0, 1.01)
+    cmap = cm.get_cmap('nipy_spectral', 100)
+    # arange of the following is partial setup for colorbar
+    CS = sub1.contourf(xval, yval, z, np.arange(0, 1.01, .01),
+                     cmap=cmap, norm=norm,  vmin=0, vmax=1.01)
+    sub1.set_xlabel('Beta')
+    sub1.set_ylabel('Alpha')
+    if titleString:
+        sub1.set_title(titleString+' R^2 Values')
+    plt.colorbar(CS, )
 
-    #norm = colors.Normalize(0, 10)
-    #cmap = cm.get_cmap('nipy_spectral', 20)
-    ## arange of the following is partial setup for colorbar
-    #CS = sub2.contourf(xval, yval, intercept, np.arange(0, 10, 1),
-    #                 cmap=cmap, norm=norm,  vmin=0, vmax=10)
-    #sub2.set_xlabel('Beta')
-    #sub2.set_ylabel('Alpha')
-    #if titleString:
-    #    sub2.set_title(titleString+' Intercept Values log10')
-    #plt.colorbar(CS, )
+    sub2 = fig.add_subplot(gs[1:3,2:])
 
-    #if name[-4:] != '.png':
-    #    #fig.savefig(name+'.png', bbox_inches='tight')
-    #    fig.savefig(name+'.png')
-    #else:
-    #    fig.savefig(name, bbox_inches='tight')
+    norm = colors.Normalize(0, 10)
+    cmap = cm.get_cmap('nipy_spectral', 20)
+    # arange of the following is partial setup for colorbar
+    CS = sub2.contourf(xval, yval, intercept, np.arange(0, 10, 1),
+                     cmap=cmap, norm=norm,  vmin=0, vmax=10)
+    sub2.set_xlabel('Beta')
+    sub2.set_ylabel('Alpha')
+    if titleString:
+        sub2.set_title(titleString+' Intercept Values log10')
+    plt.colorbar(CS, )
+
+
+    sub3 = fig.add_subplot(gs[3:5,0:2])
+    norm = colors.Normalize(0, 1.01)
+    cmap = cm.get_cmap('nipy_spectral', 100)
+    # arange of the following is partial setup for colorbar
+    CS = sub3.contourf(xval, yval, zSum, np.arange(0, 1.01, .01),
+                     cmap=cmap, norm=norm,  vmin=0, vmax=1.01)
+    sub3.set_xlabel('Beta')
+    sub3.set_ylabel('Alpha')
+    if titleString:
+        sub3.set_title(titleString+' Sum R^2 Values')
+    plt.colorbar(CS, )
+
+    sub4 = fig.add_subplot(gs[3:5,2:])
+
+    norm = colors.Normalize(0, 10)
+    cmap = cm.get_cmap('nipy_spectral', 20)
+    # arange of the following is partial setup for colorbar
+    CS = sub4.contourf(xval, yval, interceptSum, np.arange(0, 10, 1),
+                     cmap=cmap, norm=norm,  vmin=0, vmax=10)
+    sub4.set_xlabel('Beta')
+    sub4.set_ylabel('Alpha')
+    if titleString:
+        sub4.set_title(titleString+' Sum Intercept Values log10')
+    plt.colorbar(CS, )
+
+
+
+    gs.update(wspace=4, hspace=4)
+    if name[-4:] != '.png':
+        #fig.savefig(name+'.png', bbox_inches='tight')
+        fig.savefig(name+'.png')
+    else:
+        fig.savefig(name, bbox_inches='tight')
+

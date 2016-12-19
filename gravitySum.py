@@ -187,6 +187,40 @@ def gravitySum(pop, distances, roadData):
     common.makePlot(roadDataList, r2values, interceptValues, 'GravitySum', '{} Gravity Sum'.format(sys.argv[1].split('/')[0]))
 
 
+def gravitySumOnEverything(pop, keys, distMatrix, roadDataList):
+    # Making the distance matrix symmetric
+    # Should already be upper triangular,
+    # wrote overlap to not care about lower half
+    overlap = overLappingRoutes(distMatrix)
+    # Need to format into 3 lists, RoadData, Gravity, Distance
+    # All indexed in order
+    r2values = []
+    interceptValues = []
+    for alpha in common.alphaIterate():
+        this_r2 = []
+        this_intercept = []
+        for beta in common.betaIterate():
+            partialGravities = convertRoutesToList(overlap, pop, beta, alpha)
+            partialList = [x for x in partialGravities.flat if (x != 0)]
+            # partialList = formatMatrixAsList(partialGravities)
+            # roadDataList = formatMatrixAsList(roadData)
+
+            # Remove the common factor, reducing numerical error
+            factor = min([math.log(j, 10) for j in partialList])
+            partialList = [j/(10**factor) for j in partialList]
+
+            slope, intercept = common.linRegress(partialList, roadDataList)
+            # Calculate prediction on current pathed values
+            this_intercept.append(math.log(abs(intercept), 10))
+            predicted = [slope*x + intercept for x in partialList]
+            r2 = common.rSquared(predicted, roadDataList)
+            this_r2.append(r2)
+            slope = slope / (10**factor)
+        r2values.append(this_r2)
+        interceptValues.append(this_intercept)
+    return [r2values, interceptValues]
+
+
 if __name__ == '__main__' and (len(sys.argv) == 4):
         # Matrix Form
         # pop = parseData.parsePopulation(sys.argv[1])
