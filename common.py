@@ -107,7 +107,7 @@ def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleSt
     be of the size [xval, yval] as indicated
     """
     fig = plt.figure()
-    gs = gridspec.GridSpec(6, 4)
+    gs = gridspec.GridSpec(5, 4)
     box1 = fig.add_subplot(gs[0,:])
     box1.boxplot(roadDataList, 0, 'rs', 0)
     box1.set_xlabel('Traffic Data Range')
@@ -129,9 +129,9 @@ def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleSt
     sub2 = fig.add_subplot(gs[1:3,2:])
 
     norm = colors.Normalize(0, 10)
-    cmap = cm.get_cmap('nipy_spectral', 20)
+    cmap = cm.get_cmap('nipy_spectral', 100)
     # arange of the following is partial setup for colorbar
-    CS = sub2.contourf(xval, yval, intercept, np.arange(0, 10, 1),
+    CS = sub2.contourf(xval, yval, intercept, np.arange(0, 10, 0.1),
                      cmap=cmap, norm=norm,  vmin=0, vmax=10)
     sub2.set_xlabel('Beta')
     sub2.set_ylabel('Alpha')
@@ -155,9 +155,9 @@ def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleSt
     sub4 = fig.add_subplot(gs[3:5,2:])
 
     norm = colors.Normalize(0, 10)
-    cmap = cm.get_cmap('nipy_spectral', 20)
+    cmap = cm.get_cmap('nipy_spectral', 100)
     # arange of the following is partial setup for colorbar
-    CS = sub4.contourf(xval, yval, interceptSum, np.arange(0, 10, 1),
+    CS = sub4.contourf(xval, yval, interceptSum, np.arange(0, 10, 0.1),
                      cmap=cmap, norm=norm,  vmin=0, vmax=10)
     sub4.set_xlabel('Beta')
     sub4.set_ylabel('Alpha')
@@ -167,10 +167,11 @@ def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleSt
 
 
 
-    gs.update(wspace=4, hspace=4)
+    gs.update(wspace=1, hspace=1)
     if name[-4:] != '.png':
         #fig.savefig(name+'.png', bbox_inches='tight')
-        fig.savefig(name+'.png')
+        fig.set_size_inches(10, 10)
+        fig.savefig(name+'.png', dpi=100)
     else:
-        fig.savefig(name, bbox_inches='tight')
+        fig.savefig(name)
 
