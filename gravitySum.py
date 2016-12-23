@@ -8,17 +8,6 @@ import parseData
 DEBUG = True
 
 
-def formatMatrixAsList(someMatrix):
-    # Assumption that matrix is square
-    listy = []
-    size = len(someMatrix[0])
-    for i in range(size):
-        for j in range(i, size):
-            if (someMatrix[i][j] != 0):
-                listy.append(someMatrix[i][j])
-    return listy
-
-
 def runDijkstra(distances, source, destination, memory):
     """
     Distances is a formatted, symmetric matrix (assuming undirected graph)
@@ -166,8 +155,6 @@ def gravitySum(pop, distances, roadData):
         for beta in common.betaIterate():
             partialGravities = convertRoutesToList(overlap, pop, beta, alpha)
             partialList = [x for x in partialGravities.flat if (x != 0)]
-            # partialList = formatMatrixAsList(partialGravities)
-            # roadDataList = formatMatrixAsList(roadData)
 
             # Remove the common factor, reducing numerical error
             factor = min([math.log(j, 10) for j in partialList])
@@ -202,8 +189,6 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadDataList):
         for beta in common.betaIterate():
             partialGravities = convertRoutesToList(overlap, pop, beta, alpha)
             partialList = [x for x in partialGravities.flat if (x != 0)]
-            # partialList = formatMatrixAsList(partialGravities)
-            # roadDataList = formatMatrixAsList(roadData)
 
             # Remove the common factor, reducing numerical error
             factor = min([math.log(j, 10) for j in partialList])

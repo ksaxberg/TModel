@@ -1,0 +1,12 @@
+Changes from other metropolitan dataset:
+
+Combined Dallas, Fort Worth 
+Combined Austin, San Antonio
+Combined Denver, Colorado Springs
+Combined Salt Lake City, Ogden, Provo
+
+
+Notes about data sources:
+
+For Seattle, Spokane, took minimum of Seattle, Yakima and Yakima, Spokane split
+

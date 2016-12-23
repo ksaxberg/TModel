@@ -1,0 +1,4 @@
+http://www.fhwa.dot.gov/policyinformation/hpms/shapefiles.cfm
+
+Shapefiles that could yield all AADT data for interstate roads, worth lookin
+at
