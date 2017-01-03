@@ -53,12 +53,12 @@ class Network:
 
     def gravityOnEverything(pop, keys, distMatrix, distList, roadDataList):
         # FROM GRAVITY
-        gravityList = formatRawMatrices(pop, distMatrix)
+        gravityList = this.__makeGravityList(pop, distMatrix)
         
         r2values = []
         interceptValues = []
         for alpha in common.alphaIterate():
-            analysis = runGravity(roadDataList, gravityList, distList, alpha)
+            analysis = this_runGravity(roadDataList, gravityList, distList, alpha)
             this_r2 = []
             this_intercept = []
             for line in analysis:
