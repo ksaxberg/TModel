@@ -71,6 +71,8 @@ def runDijkstra(distances, source, destination, memory):
                 memory[(source, i)] = [S[i], PathSoFar[i]]
     return
 
+def makeMatrixSymmetric(matrix):
+    return matrix + matrix.T - np.diag(matrix.diagonal()) 
 
 def overLappingRoutes(distances):
     """ Runs the dijkstra algorithm on all route pairs, returns the overlap
@@ -84,43 +86,43 @@ def overLappingRoutes(distances):
     shortest path goes over the current city connection of interest, ie
     connection i, j.
     """
+    # TODO: Edited overLap routes to pass symmetric matrix to Dijkstra
+    dist = makeMatrixSymmetric(distances)
     # Have spoiler route index -1
-    size = len(distances[0])
+    size = len(dist[0])
     memory = {}
     for i in range(size):
         for j in range(i, size):
-            # TODO: Sparse Matrix - run on edges, not vertex*vertex
+            # Sparse Matrix - run on edges, not vertex*vertex
+            # Can't do that, miss routes
             # Calculates how to get from A,B for every pair.
-            runDijkstra(distances, i, j, memory)
+            #if dist[i][j] != 0:
+            runDijkstra(dist, i, j, memory)
     routeOverlap = [[[] for i in range(size)] for j in range(size)]
     for key, value in memory.items():
         # For each consecutive pair in the path
         # value is [S[i], PathSoFar[i]]
         for i in range(len(value[1])-1):
-            if value[1][i] < value[1][i+1]:
-                r1 = value[1][i]
-                r2 = value[1][i+1]
-            else:
-                r2 = value[1][i]
-                r1 = value[1][i+1]
+            r1 = min(value[1][i], value[1][i+1])
+            r2 = max(value[1][i], value[1][i+1])
             # Store the fact that the parent route goes over edge,
             #  and total distance of the path.
             routeOverlap[r1][r2].append((key, value[0]))
     return routeOverlap
 
 
-def convertRoute(overlaps, pops, pop1, pop2, beta, alpha):
-    if (pop2 > pop1):
-        pop1, pop2 = pop2, pop1
-    running = 0
-    for path in overlaps[pop1][pop2]:
-        if not path:
-            continue
-        for key, value in path:
-            temp = (pops[key[0]]*pops[key[1]])**alpha
-            temp /= value**beta
-            running += temp
-    return running
+#def convertRoute(overlaps, pops, pop1, pop2, beta, alpha):
+#    if (pop2 > pop1):
+#        pop1, pop2 = pop2, pop1
+#    running = 0
+#    for path in overlaps[pop1][pop2]:
+#        if not path:
+#            continue
+#        for key, value in path:
+#            temp = (pops[key[0]]*pops[key[1]])**alpha
+#            temp /= value**beta
+#            running += temp
+#    return running
 
 
 def convertRoutesToList(overlaps, pops, beta, alpha):
@@ -194,6 +196,7 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadDataList):
             factor = min([math.log(j, 10) for j in partialList])
             partialList = [j/(10**factor) for j in partialList]
 
+            print("Length of partial: {}\nLength of roadDataList: {}".format(len(partialList), len(roadDataList)))
             slope, intercept = common.linRegress(partialList, roadDataList)
             # Calculate prediction on current pathed values
             this_intercept.append(math.log(abs(intercept), 10))

@@ -11,7 +11,7 @@ if __name__=="__main__":
 
     pop = parseData.parsePopulation(sys.argv[1])
     keys = parseData.makeKeys(sys.argv[1])
-    dist = parseData.parseEdges(sys.argv[2], keys)
+    dist = parseData.parseEdges(sys.argv[2], keys, sumValues=False)
     distList = [i for i in dist.flat if i != 0]
     roadData = parseData.parseEdges(sys.argv[3], keys)
     roadDataList = [x for x in roadData.flat if (x != 0)]
