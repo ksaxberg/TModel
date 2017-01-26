@@ -5,7 +5,7 @@ import numpy as np
 from gravity import *
 import common
 import parseData
-DEBUG = False
+DEBUG = common.DEBUG 
 
 
 def runDijkstra(distances, source, destination, memory):

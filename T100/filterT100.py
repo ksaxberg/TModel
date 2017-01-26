@@ -1,6 +1,10 @@
 from airportsComplete import airports
 import pprint
-
+"""
+This uses the list of completed/ population listed airports
+and looks through the T100 dataset, recovering a subset where
+both destination and origin are airports of interest
+"""
 
 # Prints output dictionary of flight summary
 # Dictionary key: origin

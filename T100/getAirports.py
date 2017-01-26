@@ -1,6 +1,13 @@
 import sys
 import pprint
 
+"""
+Recovers the list of airports from the T100.txt dataset,
+printing out a list ordered by number of passengers,
+for each airport there is a tuple:
+    [Int(numberOfFlights), Int(PassengersLeaving), Int(PassengersArriving)]
+"""
+
 airports = {} 
 with open(sys.argv[1], 'r') as f:
     f.readline()

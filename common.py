@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
+DEBUG = False
 alphaMin = 0.1
 alphaMax = 3
 betaMin = 0.1 
@@ -114,6 +115,9 @@ def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleSt
 
     xval = betaIterate()
     yval = alphaIterate()
+
+
+    # Gravity Slope
     sub1 = fig.add_subplot(gs[1:3,0:2])
     norm = colors.Normalize(0, 1.01)
     cmap = cm.get_cmap('nipy_spectral', 100)
@@ -126,8 +130,9 @@ def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleSt
         sub1.set_title(titleString+' R^2 Values')
     plt.colorbar(CS, )
 
-    sub2 = fig.add_subplot(gs[1:3,2:])
 
+    # Gravity Intercept
+    sub2 = fig.add_subplot(gs[1:3,2:])
     norm = colors.Normalize(0, 10)
     cmap = cm.get_cmap('nipy_spectral', 100)
     # arange of the following is partial setup for colorbar
@@ -140,6 +145,7 @@ def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleSt
     plt.colorbar(CS, )
 
 
+    # Gravity Sum Slope
     sub3 = fig.add_subplot(gs[3:5,0:2])
     norm = colors.Normalize(0, 1.01)
     cmap = cm.get_cmap('nipy_spectral', 100)
@@ -152,8 +158,9 @@ def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleSt
         sub3.set_title(titleString+' Sum R^2 Values')
     plt.colorbar(CS, )
 
-    sub4 = fig.add_subplot(gs[3:5,2:])
 
+    # Gravity Sum Intercept
+    sub4 = fig.add_subplot(gs[3:5,2:])
     norm = colors.Normalize(0, 10)
     cmap = cm.get_cmap('nipy_spectral', 100)
     # arange of the following is partial setup for colorbar

@@ -1,5 +1,11 @@
 import sys
 filename = sys.argv[1]
+"""
+Takes in the list that looks like ORIGIN, DESTINATION, PASSENGERS
+that contains multiples of each element, sums them together.
+Currently commented out....
+"""
+
 d = {}
 with open(filename) as f:
     for line in f:
