@@ -64,7 +64,8 @@ def makeKeys(filename):
         for i, line in enumerate(f):
             key = line.strip().split(',')[0].strip()
             d[key] = i
-    return d.copy()
+            d[i] = key
+    return d
 
 
 def parsePopulation(filename):

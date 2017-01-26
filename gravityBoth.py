@@ -14,7 +14,7 @@ if __name__=="__main__":
     dist = parseData.parseEdges(sys.argv[2], keys, sumValues=False)
     distList = [i for i in dist.flat if i != 0]
     roadData = parseData.parseEdges(sys.argv[3], keys)
-    roadDataList = [x for x in roadData.flat if (x != 0)]
+    roadDataList = [i for i in roadData.flat if i != 0]
 
     r2SumValues, interceptSumValues = gravitySum(pop, keys, dist, roadDataList)
     r2Values, interceptValues = gravity(pop, keys, dist, distList, roadDataList)

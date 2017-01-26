@@ -5,7 +5,7 @@ import numpy as np
 from gravity import *
 import common
 import parseData
-DEBUG = True
+DEBUG = False
 
 
 def runDijkstra(distances, source, destination, memory):
@@ -86,7 +86,6 @@ def overLappingRoutes(distances):
     shortest path goes over the current city connection of interest, ie
     connection i, j.
     """
-    # TODO: Edited overLap routes to pass symmetric matrix to Dijkstra
     dist = makeMatrixSymmetric(distances)
     # Have spoiler route index -1
     size = len(dist[0])
@@ -108,30 +107,39 @@ def overLappingRoutes(distances):
             # Store the fact that the parent route goes over edge,
             #  and total distance of the path.
             routeOverlap[r1][r2].append((key, value[0]))
+    #TODO: Remove count of routes
+    if DEBUG:
+        count = 0
+        firstFive = []
+        for i in range(len(routeOverlap)):
+            for j in range(len(routeOverlap[0])):
+                if routeOverlap[i][j]:
+                    count += 1
+                elif distances[i][j] != 0:
+                    firstFive.append((i, j, distances[i][j]))
+        print("Count of overlapping routes returned: {}".format(count))
+        print("Route samples:")
+        for i in range(min(5, len(firstFive))):
+            print("\t{0}, {1}, {2}".format(firstFive[i][0], firstFive[i][1], firstFive[i][2]))
+        
+        with open("RoutesThatNeedChanging.txt", "w") as f:
+            for i in range(len(firstFive)):
+                f.write("{0}, {1}, {2}\n".format(firstFive[i][0], firstFive[i][1], firstFive[i][2]))
+            
     return routeOverlap
-
-
-#def convertRoute(overlaps, pops, pop1, pop2, beta, alpha):
-#    if (pop2 > pop1):
-#        pop1, pop2 = pop2, pop1
-#    running = 0
-#    for path in overlaps[pop1][pop2]:
-#        if not path:
-#            continue
-#        for key, value in path:
-#            temp = (pops[key[0]]*pops[key[1]])**alpha
-#            temp /= value**beta
-#            running += temp
-#    return running
 
 
 def convertRoutesToList(overlaps, pops, beta, alpha):
     # Constant factor K will have to be multiplied on the size
-    partialGravities = np.zeros([len(overlaps), len(overlaps)])
+    partialGravities = np.ones([len(overlaps), len(overlaps)])
+    partialGravities *= -1
     for i, row in enumerate(overlaps):
         for j, col in enumerate(row):
             if not col:
                 continue
+            else:
+                # Reset to zero if have values to add
+                partialGravities[i][j] = 0
             for x in col:
                 # For each x, add the partial gravity
                 val = (pops[x[0][0]][0])*(pops[x[0][1]][0])
@@ -156,7 +164,7 @@ def gravitySum(pop, distances, roadData):
         this_intercept = []
         for beta in common.betaIterate():
             partialGravities = convertRoutesToList(overlap, pop, beta, alpha)
-            partialList = [x for x in partialGravities.flat if (x != 0)]
+            partialList = [x for x in partialGravities.flat if x != -1]
 
             # Remove the common factor, reducing numerical error
             factor = min([math.log(j, 10) for j in partialList])
@@ -190,13 +198,13 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadDataList):
         this_intercept = []
         for beta in common.betaIterate():
             partialGravities = convertRoutesToList(overlap, pop, beta, alpha)
-            partialList = [x for x in partialGravities.flat if (x != 0)]
+            partialList = [x for x in partialGravities.flat if x != -1]
 
             # Remove the common factor, reducing numerical error
             factor = min([math.log(j, 10) for j in partialList])
             partialList = [j/(10**factor) for j in partialList]
 
-            print("Length of partial: {}\nLength of roadDataList: {}".format(len(partialList), len(roadDataList)))
+            if DEBUG: print("Length of partial: {}\nLength of roadDataList: {}".format(len(partialList), len(roadDataList)))
             slope, intercept = common.linRegress(partialList, roadDataList)
             # Calculate prediction on current pathed values
             this_intercept.append(math.log(abs(intercept), 10))

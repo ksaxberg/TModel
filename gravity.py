@@ -14,13 +14,14 @@ def formatRawMatrices(pop, dist):
     """
     dim = len(pop.keys())
     # Find non-zero indices first, create shortlist
-    gravitys = np.zeros([dim, dim])
+    gravitys = np.ones([dim, dim])
+    gravitys *= -1
     for i in range(dim):
         for j in range(i, dim):
-            if(dist[i][j] != 0):
+            if dist[i][j] != 0:
                 gravitys[i][j] = pop[i][0]*pop[j][0]
     # is the same as the above in terms of element ordering
-    gravityList = [i for i in gravitys.flat if i != 0]
+    gravityList = [i for i in gravitys.flat if i != -1] 
     return gravityList
 
 
