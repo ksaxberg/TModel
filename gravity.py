@@ -25,6 +25,20 @@ def formatRawMatrices(pop, dist):
     return gravityList
 
 
+def singleRegression(gravityValues, travelValues):
+    """
+    Runs through a single regression, assuming that the gravity values 
+    are calculated with alpha and beta already
+    """
+    factor = min([math.log(j, 10) for j in gravityValues])
+    gravityValues = [j/(10**factor) for j in gravityValues]
+    slope, intercept = common.linRegress(gravityValues, travelValues)
+    predicted = [slope*x+intercept for x in gravityValues]
+    slope = slope/ (10**factor)
+    r2 = common.rSquared(predicted, travelValues)
+    return slope, intercept, r2
+    
+
 def runGravity(travel, gravitys, distance, alpha=1):
     """ Start with population product in gravity matrix
 
@@ -37,13 +51,8 @@ def runGravity(travel, gravitys, distance, alpha=1):
     for i, beta in enumerate(common.betaIterate()):
         gravityBeta = [(x**alpha/(distance[j]**beta)) for j, x
                        in enumerate(gravitys)]
-        factor = min([math.log(j, 10) for j in gravityBeta])
-        gravityBeta = [j/(10**factor) for j in gravityBeta]
         M[i][0], M[i][1] = beta, alpha
-        slope, M[i][3] = common.linRegress(gravityBeta, travel)
-        M[i][2] = slope / (10**factor) 
-        predicted = [slope*x+M[i][3] for x in gravityBeta]
-        M[i][4] = common.rSquared(predicted, travel)
+        M[i][2], M[i][3], M[i][4] = singleRegression(gravityBeta, travel)
     return M
 
 def gravityOnEverything(pop, keys, distMatrix, distList, roadDataList):

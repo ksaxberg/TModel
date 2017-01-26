@@ -2,6 +2,7 @@ from matplotlib import cm
 from matplotlib import colors
 from matplotlib import colorbar
 from matplotlib import gridspec
+from decimal import Decimal
 import matplotlib.pyplot as plt
 import numpy as np
 import math
@@ -25,6 +26,9 @@ def betaIterate():
 
 def numBetaEntries():
     return int(math.ceil((betaMax-betaMin)/stepValueBeta))
+
+def formatScientific(x):
+    return "{:.2E}".format(Decimal(x))
 
 
 def rSquared(pred, meas):
@@ -101,24 +105,46 @@ def makePlot(roadDataList, z, intercept, name="img", titleString=""):
         fig.savefig(name, bbox_inches='tight')
 
 
-def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleString=""):
+def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleString="", rowA1B1ofGravity=[]):
     """ Makes four countour plots, box plot and saves to the specified filename
 
     File will be saved into current directory as a png, input matrix z must
     be of the size [xval, yval] as indicated
     """
-    fig = plt.figure()
-    gs = gridspec.GridSpec(5, 4)
-    box1 = fig.add_subplot(gs[0,:])
-    box1.boxplot(roadDataList, 0, 'rs', 0)
-    box1.set_xlabel('Traffic Data Range')
-
     xval = betaIterate()
     yval = alphaIterate()
+    fig = plt.figure()
+    gs = gridspec.GridSpec(6, 4)
+    
+    #### First Row Option 1: Single large boxplot
+    #box1 = fig.add_subplot(gs[0,:])
+    #box1.boxplot(roadDataList, 0, 'rs', 0)
+    #box1.set_xlabel('Traffic Data Range')
+    ####    End 
 
+    #### First Row Option 2: Boxplot and plot of alpha1, beta 1
+    if not rowA1B1ofGravity:
+        raise ValueError("""Plot wants to show Alpha=1, Beta=1 gravity regression
+            but regression values not passed in as rowA1B1ofGravity""")
+    box1 = fig.add_subplot(gs[0, 0:2])
+    box1.boxplot(roadDataList, 0, 'rs', 0)
+    box1.set_xlabel('Traffic Data Range')
+    
+    scatter = fig.add_subplot(gs[0:2, 2:])
+    alphaInd = int((1-alphaMin)/stepValueAlpha) 
+    betaInd = int((1-betaMin)/stepValueBeta)
+    m = z[alphaInd][betaInd]
+    b = intercept[alphaInd][betaInd]
+    predictions = [x*m + b for x in rowA1B1ofGravity]
+    scatter.scatter(rowA1B1ofGravity, predictions, c='b', marker='s', label="predictions")
+    scatter.scatter(rowA1B1ofGravity, roadDataList, c='r', marker='o', label="actual") 
+    scatter.set_xlabel('Gravity Val input,\n m={} b={}'.format(formatScientific(m), formatScientific(b)))
+    scatter.set_ylabel('Number of People')
+    scatter.legend(loc="upper right")
+    ####    End
 
     # Gravity Slope
-    sub1 = fig.add_subplot(gs[1:3,0:2])
+    sub1 = fig.add_subplot(gs[2:4, 0:2])
     norm = colors.Normalize(0, 1.01)
     cmap = cm.get_cmap('nipy_spectral', 100)
     # arange of the following is partial setup for colorbar
@@ -132,7 +158,7 @@ def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleSt
 
 
     # Gravity Intercept
-    sub2 = fig.add_subplot(gs[1:3,2:])
+    sub2 = fig.add_subplot(gs[2:4,2:])
     norm = colors.Normalize(0, 10)
     cmap = cm.get_cmap('nipy_spectral', 100)
     # arange of the following is partial setup for colorbar
@@ -146,7 +172,7 @@ def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleSt
 
 
     # Gravity Sum Slope
-    sub3 = fig.add_subplot(gs[3:5,0:2])
+    sub3 = fig.add_subplot(gs[4:6,0:2])
     norm = colors.Normalize(0, 1.01)
     cmap = cm.get_cmap('nipy_spectral', 100)
     # arange of the following is partial setup for colorbar
@@ -160,7 +186,7 @@ def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleSt
 
 
     # Gravity Sum Intercept
-    sub4 = fig.add_subplot(gs[3:5,2:])
+    sub4 = fig.add_subplot(gs[4:6,2:])
     norm = colors.Normalize(0, 10)
     cmap = cm.get_cmap('nipy_spectral', 100)
     # arange of the following is partial setup for colorbar
@@ -174,7 +200,7 @@ def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleSt
 
 
 
-    gs.update(wspace=1, hspace=1)
+    gs.update(wspace=2, hspace=2)
     if name[-4:] != '.png':
         #fig.savefig(name+'.png', bbox_inches='tight')
         fig.set_size_inches(10, 10)
