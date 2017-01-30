@@ -30,11 +30,14 @@ def singleRegression(gravityValues, travelValues):
     Runs through a single regression, assuming that the gravity values 
     are calculated with alpha and beta already
     """
-    factor = min([math.log(j, 10) for j in gravityValues])
-    gravityValues = [j/(10**factor) for j in gravityValues]
+    #factor = min([math.log(j, 10) for j in gravityValues])
+    #gravityValues = [j/(10**factor) for j in gravityValues]
+    #slope, intercept = common.linRegress(gravityValues, travelValues)
+    #predicted = [slope*x+intercept for x in gravityValues]
+    #slope = slope/ (10**factor)
+    #r2 = common.rSquared(predicted, travelValues)
     slope, intercept = common.linRegress(gravityValues, travelValues)
     predicted = [slope*x+intercept for x in gravityValues]
-    slope = slope/ (10**factor)
     r2 = common.rSquared(predicted, travelValues)
     return slope, intercept, r2
     

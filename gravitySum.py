@@ -167,8 +167,8 @@ def gravitySum(pop, distances, roadData):
             partialList = [x for x in partialGravities.flat if x != -1]
 
             # Remove the common factor, reducing numerical error
-            factor = min([math.log(j, 10) for j in partialList])
-            partialList = [j/(10**factor) for j in partialList]
+            #factor = min([math.log(j, 10) for j in partialList])
+            #partialList = [j/(10**factor) for j in partialList]
 
             slope, intercept = common.linRegress(partialList, roadDataList)
             # Calculate prediction on current pathed values
@@ -176,7 +176,7 @@ def gravitySum(pop, distances, roadData):
             predicted = [slope*x + intercept for x in partialList]
             r2 = common.rSquared(predicted, roadDataList)
             this_r2.append(r2)
-            slope = slope / (10**factor)
+            #slope = slope / (10**factor)
             print("{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.3e}".format(beta, alpha,
                   slope, intercept, r2))
         r2values.append(this_r2)
@@ -201,8 +201,8 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadDataList):
             partialList = [x for x in partialGravities.flat if x != -1]
 
             # Remove the common factor, reducing numerical error
-            factor = min([math.log(j, 10) for j in partialList])
-            partialList = [j/(10**factor) for j in partialList]
+            #factor = min([math.log(j, 10) for j in partialList])
+            #partialList = [j/(10**factor) for j in partialList]
 
             if DEBUG: print("Length of partial: {}\nLength of roadDataList: {}".format(len(partialList), len(roadDataList)))
             slope, intercept = common.linRegress(partialList, roadDataList)
@@ -211,7 +211,7 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadDataList):
             predicted = [slope*x + intercept for x in partialList]
             r2 = common.rSquared(predicted, roadDataList)
             this_r2.append(r2)
-            slope = slope / (10**factor)
+            #slope = slope / (10**factor)
         r2values.append(this_r2)
         interceptValues.append(this_intercept)
     return [r2values, interceptValues]

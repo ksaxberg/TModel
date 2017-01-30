@@ -4,8 +4,7 @@ from gravity import singleRegression
 from gravitySum import gravitySumOnEverything as gravitySum
 import sys
 import parseData
-from common import plotBoth
-from common import linRegress
+import common
 
 
 if __name__=="__main__":
@@ -21,13 +20,15 @@ if __name__=="__main__":
 
     #### Simply to get a1b1Row for plotting alpha 1, beta 1
     gravityList = formatMatrix(pop, dist)
-    gravityEstimate = [x/distList[i] for i, x in enumerate(gravityList)]
-    a1b1Row = gravityEstimate
+    gravityEstimate = [x**common.alphaExample/(distList[i]**common.betaExample) for i, x in enumerate(gravityList)]
+    exampleRow = gravityEstimate
+    m, b, _ = singleRegression(exampleRow, roadDataList)
     ####    End
 
     r2SumValues, interceptSumValues = gravitySum(pop, keys, dist, roadDataList)
     r2Values, interceptValues = gravity(pop, keys, dist, distList, roadDataList)
     # From Gravity
-    plotBoth(roadDataList, r2Values, interceptValues, r2SumValues,
-        interceptSumValues, titleString = " ", rowA1B1ofGravity=a1b1Row)
+    common.plotBoth(roadDataList, r2Values, interceptValues, r2SumValues,
+        interceptSumValues, titleString = " ", rowExampleGravity=exampleRow,
+        rowslope=m, rowint=b)
     #plotBoth(roadDataList, r2Values, interceptValues, r2SumValues, interceptSumValues, titleString = " ")
