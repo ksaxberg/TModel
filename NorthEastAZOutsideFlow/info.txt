@@ -18,3 +18,4 @@ This dataset has the filtering that the other NorthEastAZ dataset lacks.
 Cities with no significant seperation (10 miles of non-populated area) are aggregated together. Some population is added to Holbrook, to represent the attractiveness of I40 (this value is simply the size of the traffic on I40 on the segment near Holbrook). Other changes are documented within each subfolder.
 
 Additional changes: attempts to include "outside nodes" to give a closed graph.
+Three nodes were added, however this only improved model output slightly.

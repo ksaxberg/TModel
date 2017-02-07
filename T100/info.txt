@@ -1,3 +1,12 @@
+This dataset represents a collection of air traffic for the first quarter 
+of 2016. Several issues were encountered with managing this dataset, which
+are detailed below. Population allocation remains an issue, and only a subset
+of the dataset was able to be run through the model due to inability to 
+automate the information retrieval, and due to the difficulty of calibration
+on the subset of data already managed. 
+
+
+
 Downloaded from http://www.transtats.bts.gov/Fields.asp?Table_ID=258
 
 Air Carriers: T-100 Domestic Market (US Carriers)

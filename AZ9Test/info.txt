@@ -1,0 +1,14 @@
+A set of calibrated data from Craig, representing population and 
+human mobility in Arizona. This dataset contains only 9 nodes, some 
+of which represent large cities and some represent clustering of
+small cities or sparsely populated regions. The road segment data
+was recovered from the 2015 Arizona Department of Transportation AADT
+data, available as of January, 2017 at the following site.
+
+http://azdot.gov/planning/DataandAnalysis/average-annual-daily-traffic
+
+
+Populations of various regions were collected from Metropolitan 
+Statistical areas from the 2010 census, and various other listings for
+the smaller city regions. 
+
