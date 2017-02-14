@@ -17,6 +17,8 @@ if __name__=="__main__":
     distList = [i for i in dist.flat if i != 0]
     roadData = parseData.parseEdges(sys.argv[3], keys)
     roadDataList = [i for i in roadData.flat if i != 0]
+    if common.DEBUG:
+        print("Length of pop:{}\n\tof dist:{}\n\tof distList:{}\n\tof roadData:{}\n\tof roadDataList:{}".format(len(pop), len(dist), len(distList), len(roadData), len(roadDataList)))
 
     #### Simply to get a1b1Row for plotting alpha 1, beta 1
     gravityList = formatMatrix(pop, dist)

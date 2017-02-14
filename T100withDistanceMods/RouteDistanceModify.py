@@ -1,5 +1,4 @@
 import parseData
-
 """
 Reduces the distance length of the route by 1
 """

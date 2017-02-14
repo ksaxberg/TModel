@@ -5,6 +5,7 @@ Note: Lingering large number precision issues still need to be addressed.
 
 
 Usage:
+
 	gravityBoth.py expects 3 commandline inputs, one with the population, 
 	one with the distances between cities, one with the actual measures
 	of vehicles traveling on the road. This will create an image output
@@ -18,11 +19,29 @@ Usage:
 	and measured data is listed by the vertices on the edge. 
 
 	Example run: 
+
 	  python3 gravityBoth.py ./test/population.txt ./test/distance.txt ./test/roadData.txt
 
 	
+Explanation of data and collection techniques:
+
+    For most of the AADT traffic datasets (including AZ24Node, AZ9Test, North
+    East AZ, Oregon, WAandOR, Washington), data was collected from government 
+    AADT traffic data publications. Different techniques were involved, as 
+    there is acknowledged variability in the quality of the AADT data due to 
+    sensor issues, maintenance, and road closures. On the stretch of road 
+    connecting two places of interest, some datasets include an average of the 
+    lowest 3-5 AADT values and others include a number representing the lower
+    part of the distribution of values along the stretch of road, usually 
+    around the first quantile. The "addNoise.py" file is included to give 
+    support to the idea that the trends seen are resistent to mild pertubation
+    of the actual road data values, that the exact data is not necessary.
+    A more complete list of heuristics used is being developed with "TheWest"
+    dataset, as two independent parties use the guidelines to develop a set of
+    data. 
 
 Explanation of files:
+
 	Core files:
 	  gravity.py, gravitySum.py, parseData.py, common.py, gravityBoth.py
 	The file common.py contains a list of parameters to vary to change the
