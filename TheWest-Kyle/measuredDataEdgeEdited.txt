@@ -1,0 +1,29 @@
+Houston, San Antonio, 33767.0
+Kansas City, Wichita, 13560.0
+Kansas City, Omaha, 12995.0
+Phoenix, Tucson, 42048.0
+Phoenix, Las Vegas, 22718.0
+Phoenix, Albuquerque, 15379.0
+McAllen, Corpus Christi, 7965.0
+Albuquerque, El Paso, 6380.0
+Albuquerque, Colorado Springs, 7123.0
+Denver, Omaha, 9337.0
+Denver, Las Vegas, 3793.0
+Denver, Kansas City, 10018.0
+Boise, Ogden, 7766.0
+El Paso, Tucson, 12854.0
+Las Vegas, Provo, 12820.0
+Las Vegas, Reno, 2283.0
+Salt Lake City, Reno, 6118.0
+Oklahoma City, Wichita, 17592.0
+Oklahoma City, Albuquerque, 12090.0
+Dallas-Fort Worth, Houston, 31646.0
+Dallas-Fort Worth, Oklahoma City, 32150.0
+Dallas-Fort Worth, San Antonio, 64753.0
+Dallas-Fort Worth, El Paso, 15584.0
+Portland, Spokane, 11190.0
+Seattle, Portland, 67982.0
+Seattle, Spokane, 11499.0
+Seattle, Boise, 9940.0
+San Antonio, El Paso, 7698.0
+San Antonio, Corpus Christi, 18082.0

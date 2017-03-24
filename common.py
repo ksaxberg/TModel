@@ -8,15 +8,18 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
-DEBUG = True
+DEBUG = False
 alphaMin = 0.1
 alphaMax = 3
 alphaExample = .5 
 betaMin = 0.1 
 betaMax = 3
-betaExample = 2.0 
+betaExample = 0.1 
 stepValueAlpha = 0.1
 stepValueBeta = 0.1
+useGravitySumThresh = True
+deleteFromOriginalNetworkSum = False
+gravitySumDistThresh = 500
 
 
 def alphaIterate():

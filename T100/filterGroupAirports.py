@@ -4,8 +4,9 @@ import pprint
 This uses the list of completed/ population listed airports
 and looks through the T100 dataset, recovering a subset where
 both destination and origin are airports of interest.
-This looks in airportsComplete for airports, a list of airports to consider
-from the dataset. 
+
+This program also expects an additional file, of airports to consider as the 
+same. This establishes airport routes that otherwise would not be in the graph.
 """
 
 # Prints output dictionary of flight summary

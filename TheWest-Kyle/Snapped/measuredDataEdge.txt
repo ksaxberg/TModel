@@ -1,0 +1,28 @@
+Seattle, Portland, 67982
+Seattle, Spokane, 11499
+Seattle, Boise, 9940
+Salt Lake City, Boise, 7766
+Reno, Salt Lake City, 6118
+Salt Lake City, Las Vegas, 12820
+Denver, Las Vegas, 3793
+Reno, Las Vegas, 2283
+Las Vegas, Phoenix, 22718
+Phoenix, Tucson, 42048
+Phoenix, Albuquerque, 15379
+Albuquerque, Denver, 7123
+Albuquerque, El Paso, 6380
+Tucson, El Paso, 12854
+El Paso, San Antonio, 7698
+San Antonio, Corpus Christi, 18082
+Corpus Christi, McAllen, 7965
+Houston, San Antonio, 33767
+Houston, Dallas-Fort Worth, 31646
+El Paso, Dallas-Fort Worth, 15584
+San Antonio, Dallas-Fort Worth, 64753
+Dallas-Fort Worth, Oklahoma City, 32150
+Oklahoma City, Albuquerque, 12090
+Oklahoma City, Wichita, 17592
+Wichita, Kansas City, 13560
+Kansas City, Denver, 10018
+Omaha, Denver, 9337
+Omaha, Kansas City, 12995

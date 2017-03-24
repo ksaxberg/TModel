@@ -61,14 +61,21 @@ def runDijkstra(distances, source, destination, memory):
                 PathSoFar[x] = list(PathSoFar[newMin])
                 PathSoFar[x].append(x)
     # Only adding completed routes to the memory, things in S
-    for i in S.keys():
+    for i, distance in S.items():
+        if common.useGravitySumThresh and distance > common.gravitySumDistThresh:
+            #TODO: Why remove it here? Why not when actually summing
+            if common.deleteFromOriginalNetworkSum:
+                continue
+            else:
+                #TODO: Check if segment from the original network
+                
         if (i != source and (source, i) not in memory and
                 (i, source) not in memory):
             # Add this to memory then
             if i < source:
-                memory[(i, source)] = [S[i], PathSoFar[i]]
+                memory[(i, source)] = [distance, PathSoFar[i]]
             else:
-                memory[(source, i)] = [S[i], PathSoFar[i]]
+                memory[(source, i)] = [distance, PathSoFar[i]]
     return
 
 def makeMatrixSymmetric(matrix):
@@ -99,11 +106,17 @@ def overLappingRoutes(distances):
             runDijkstra(dist, i, j, memory)
     routeOverlap = [[[] for i in range(size)] for j in range(size)]
     for key, value in memory.items():
+        length, pathTaken = value
         # For each consecutive pair in the path
         # value is [S[i], PathSoFar[i]]
-        for i in range(len(value[1])-1):
-            r1 = min(value[1][i], value[1][i+1])
-            r2 = max(value[1][i], value[1][i+1])
+        # value is [distance, [A, B, C, D]]
+        if common.useGravitySumThresh:
+            if #TODO: Remove from overlapping stuff here 
+            
+            
+        for i in range(len(pathTaken)-1):
+            r1 = min(pathTaken[i], pathTaken[i+1])
+            r2 = max(pathTaken[i], pathTaken[i+1])
             # Store the fact that the parent route goes over edge,
             #  and total distance of the path.
             routeOverlap[r1][r2].append((key, value[0]))
@@ -156,6 +169,12 @@ def gravitySum(pop, distances, roadData):
     overlap = overLappingRoutes(distances)
     # Need to format into 3 lists, RoadData, Gravity, Distance
     # All indexed in order
+    if common.useGravitySumThresh:
+        #TODO:Remove components from roadDataList & Distances if not in overlap
+        def removeTheLongEdges(matr, overlaps):
+            #TODO: these codes 
+        roadData = removeTheLongEdges(roadData, overlap)
+        distances = removeTheLongEdges(distances, overlap)
     roadDataList = [x for x in roadData.flat if (x != 0)]
     r2values = []
     interceptValues = []

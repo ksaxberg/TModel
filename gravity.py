@@ -25,20 +25,14 @@ def formatRawMatrices(pop, dist):
     return gravityList
 
 
-def singleRegression(gravityValues, travelValues):
+def singleRegression(x, y):
     """
     Runs through a single regression, assuming that the gravity values 
     are calculated with alpha and beta already
     """
-    #factor = min([math.log(j, 10) for j in gravityValues])
-    #gravityValues = [j/(10**factor) for j in gravityValues]
-    #slope, intercept = common.linRegress(gravityValues, travelValues)
-    #predicted = [slope*x+intercept for x in gravityValues]
-    #slope = slope/ (10**factor)
-    #r2 = common.rSquared(predicted, travelValues)
-    slope, intercept = common.linRegress(gravityValues, travelValues)
-    predicted = [slope*x+intercept for x in gravityValues]
-    r2 = common.rSquared(predicted, travelValues)
+    slope, intercept = common.linRegress(x, y)
+    predicted = [slope*i+intercept for i in x]
+    r2 = common.rSquared(predicted, y)
     return slope, intercept, r2
     
 
