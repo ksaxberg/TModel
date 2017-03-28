@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
-DEBUG = False
+DEBUG = True
 alphaMin = 0.1
 alphaMax = 3
 alphaExample = .5 
@@ -19,7 +19,7 @@ stepValueAlpha = 0.1
 stepValueBeta = 0.1
 useGravitySumThresh = True
 deleteFromOriginalNetworkSum = False
-gravitySumDistThresh = 500
+gravitySumDistThresh = 300 
 
 
 def alphaIterate():
@@ -59,8 +59,7 @@ def linRegress(x, y):
     """
     x_values = np.array(x)
     y_values = np.array(y)
-    if DEBUG:
-        print("x length: {}\ny length: {}\n".format(len(x), len(y)))
+    #if DEBUG: print("x length: {}\ny length: {}\n".format(len(x), len(y)))
     A = np.vstack([x_values, np.ones(len(x_values))]).T
     slope, intercept = np.linalg.lstsq(A, y_values)[0]
     return slope, intercept

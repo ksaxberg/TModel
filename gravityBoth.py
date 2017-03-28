@@ -27,7 +27,7 @@ if __name__=="__main__":
     m, b, _ = singleRegression(exampleRow, roadDataList)
     ####    End
 
-    r2SumValues, interceptSumValues = gravitySum(pop, keys, dist, roadDataList)
+    r2SumValues, interceptSumValues = gravitySum(pop, keys, dist, roadData)
     r2Values, interceptValues = gravity(pop, keys, dist, distList, roadDataList)
     # From Gravity
     common.plotBoth(roadDataList, r2Values, interceptValues, r2SumValues,

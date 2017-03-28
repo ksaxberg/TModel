@@ -1,15 +1,32 @@
-Phoenix, Albuquerque, 421.0
-Albuquerque, Colorado Springs, 379.0
-Denver, Omaha, 537.0
-Denver, Las Vegas, 749.0
-Denver, Kansas City, 605.0
-Boise, Ogden, 305.0
-El Paso, Tucson, 316.0
-Las Vegas, Provo, 377.0
-Las Vegas, Reno, 448.0
-Salt Lake City, Reno, 518.0
-Oklahoma City, Albuquerque, 541.0
-Dallas-Fort Worth, El Paso, 627.0
-Portland, Spokane, 351.0
-Seattle, Boise, 495.0
-San Antonio, El Paso, 579.0
+Seattle, Portland, 174
+Seattle, Spokane, 279
+Portland, Spokane, 351
+Seattle, Boise, 495
+Boise, Ogden, 305
+Salt Lake City, Ogden, 38
+Reno, Salt Lake City, 518
+Salt Lake City, Provo, 45
+Provo, Las Vegas, 377
+Denver, Las Vegas, 749
+Reno, Las Vegas, 448
+Las Vegas, Phoenix, 298
+Phoenix, Tucson, 116
+Phoenix, Albuquerque, 421
+Albuquerque, Colorado Springs, 379
+Colorado Springs, Denver, 70
+Albuquerque, El Paso, 268
+Tucson, El Paso, 316
+El Paso, San Antonio, 579
+San Antonio, Corpus Christi, 217
+Corpus Christi, McAllen, 153
+Houston, San Antonio, 165
+Houston, Dallas-Fort Worth, 241
+El Paso, Dallas-Fort Worth, 627
+San Antonio, Dallas-Fort Worth, 202
+Dallas-Fort Worth, Oklahoma City, 206
+Oklahoma City, Albuquerque, 541
+Oklahoma City, Wichita, 161
+Wichita, Kansas City, 199
+Kansas City, Denver, 605
+Omaha, Denver, 537
+Omaha, Kansas City, 188

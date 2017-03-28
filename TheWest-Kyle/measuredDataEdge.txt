@@ -1,15 +1,32 @@
-Phoenix, Albuquerque, 15379.0
-Albuquerque, Colorado Springs, 7123.0
-Denver, Omaha, 9337.0
-Denver, Las Vegas, 3793.0
-Denver, Kansas City, 10018.0
-Boise, Ogden, 7766.0
-El Paso, Tucson, 12854.0
-Las Vegas, Provo, 12820.0
-Las Vegas, Reno, 2283.0
-Salt Lake City, Reno, 6118.0
-Oklahoma City, Albuquerque, 12090.0
-Dallas-Fort Worth, El Paso, 15584.0
-Portland, Spokane, 11190.0
-Seattle, Boise, 9940.0
-San Antonio, El Paso, 7698.0
+Seattle, Portland, 67982
+Seattle, Spokane, 11499
+Portland, Spokane, 11190
+Seattle, Boise, 9940
+Boise, Ogden, 7766
+Salt Lake City, Ogden, 97713
+Reno, Salt Lake City, 6118
+Salt Lake City, Provo, 131062
+Provo, Las Vegas, 12820
+Denver, Las Vegas, 3793
+Reno, Las Vegas, 2283
+Las Vegas, Phoenix, 22718
+Phoenix, Tucson, 42048
+Phoenix, Albuquerque, 15379
+Albuquerque, Colorado Springs, 7123
+Colorado Springs, Denver, 75000
+Albuquerque, El Paso, 6380
+Tucson, El Paso, 12854
+El Paso, San Antonio, 7698
+San Antonio, Corpus Christi, 18082
+Corpus Christi, McAllen, 7965
+Houston, San Antonio, 33767
+Houston, Dallas-Fort Worth, 31646
+El Paso, Dallas-Fort Worth, 15584
+San Antonio, Dallas-Fort Worth, 64753
+Dallas-Fort Worth, Oklahoma City, 32150
+Oklahoma City, Albuquerque, 12090
+Oklahoma City, Wichita, 17592
+Wichita, Kansas City, 13560
+Kansas City, Denver, 10018
+Omaha, Denver, 9337
+Omaha, Kansas City, 12995
