@@ -8,18 +8,18 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
-DEBUG = True
+DEBUG = False
 alphaMin = 0.1
-alphaMax = 3
+alphaMax = 2 
 alphaExample = .5 
 betaMin = 0.1 
 betaMax = 3
-betaExample = 0.1 
+betaExample = 0.8
 stepValueAlpha = 0.1
 stepValueBeta = 0.1
-useGravitySumThresh = True
-deleteFromOriginalNetworkSum = False
-gravitySumDistThresh = 300 
+useGravitySumThresh = False
+deleteFromOriginalNetworkSum = True
+gravitySumDistThresh = 50 
 
 
 def alphaIterate():
@@ -141,19 +141,37 @@ def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleSt
     box1.boxplot(roadDataList, 0, 'rs', 0)
     box1.set_xlabel('Traffic Data Range')
     
+    # Alpha beta plot
+    #####scatter = fig.add_subplot(gs[0:2, 2:])
+    #####m = rowslope
+    #####b = rowint
+    #####predictions = [x*m + b for x in rowExampleGravity]
+    #####factor = 1
+    #####for i in range(len(predictions)):
+    #####    factor = max(factor, predictions[i], rowExampleGravity[i])
+    #####scatter.scatter(rowExampleGravity, predictions, c='b', marker='x', label="predictions")
+    #####scatter.scatter(rowExampleGravity, roadDataList, c='r', marker='+', label="actual") 
+    #####scatter.set_xlabel('Gravity Val input')
+    #####scatter.set_ylim(1, factor*10)
+    #####scatter.set_yscale('log')
+    #####scatter.set_xscale('log')
+    #####scatter.set_title("Gravity where alpha={}, beta={} \nm={} b={}".format(alphaExample, betaExample,
+    #####                  formatScientific(m), formatScientific(b)))
+    #####scatter.set_ylabel('Number of People')
+    #####scatter.legend(loc="upper left", frameon=False)
     scatter = fig.add_subplot(gs[0:2, 2:])
     m = rowslope
     b = rowint
     predictions = [x*m + b for x in rowExampleGravity]
+    predictions_noInt = [x*m for x in rowExampleGravity]
     factor = 1
     for i in range(len(predictions)):
         factor = max(factor, predictions[i], rowExampleGravity[i])
     scatter.scatter(rowExampleGravity, predictions, c='b', marker='x', label="predictions")
+    scatter.scatter(rowExampleGravity, predictions_noInt, c='g', marker='+', label="predictions without intercept")
     scatter.scatter(rowExampleGravity, roadDataList, c='r', marker='+', label="actual") 
     scatter.set_xlabel('Gravity Val input')
-    scatter.set_ylim(1, factor*10)
-    scatter.set_yscale('log')
-    scatter.set_xscale('log')
+    #scatter.set_ylim(1, factor*10)
     scatter.set_title("Gravity where alpha={}, beta={} \nm={} b={}".format(alphaExample, betaExample,
                       formatScientific(m), formatScientific(b)))
     scatter.set_ylabel('Number of People')
