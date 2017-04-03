@@ -9,6 +9,7 @@ import numpy as np
 import math
 
 DEBUG = False
+gravityFactorForNumErr = 1.0/100000.0
 alphaMin = 0.1
 alphaMax = 2 
 alphaExample = .5 
@@ -17,9 +18,10 @@ betaMax = 3
 betaExample = 0.8
 stepValueAlpha = 0.1
 stepValueBeta = 0.1
-useGravitySumThresh = False
-deleteFromOriginalNetworkSum = True
-gravitySumDistThresh = 50 
+useGravitySumThresh = True
+deleteFromOriginalNetworkSum = False
+gravitySumDistThresh = 500 
+gravitySumDistThreshMinimum = 0 
 
 
 def alphaIterate():

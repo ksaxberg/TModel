@@ -109,11 +109,15 @@ def overLappingRoutes(distances):
                 # Removes edge if exceeds desired distance threshold
                 if length > common.gravitySumDistThresh:
                     continue
+                if length < common.gravitySumDistThreshMinimum:
+                    continue
             else:
                 # Leaves original edges of graph in tact
                 if not len(pathTaken) == 2:
                     # Then have a pass-through edge
                     if length > common.gravitySumDistThresh:
+                        continue
+                    if length < common.gravitySumDistThreshMinimum:
                         continue
             
         for i in range(len(pathTaken)-1):

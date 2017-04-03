@@ -46,10 +46,12 @@ def runGravity(travel, gravitys, distance, alpha=1):
     """
     M = np.zeros([common.numBetaEntries(), 5])
     for i, beta in enumerate(common.betaIterate()):
-        gravityBeta = [(x**alpha/(distance[j]**beta)) for j, x
+        gravityBeta = [common.gravityFactorForNumErr*(x**alpha/(distance[j]**beta)) for j, x
                        in enumerate(gravitys)]
         M[i][0], M[i][1] = beta, alpha
         M[i][2], M[i][3], M[i][4] = singleRegression(gravityBeta, travel)
+        # Multiply factor back into scale
+        M[i][2] /= common.gravityFactorForNumErr
     return M
 
 def gravityOnEverything(pop, keys, distMatrix, distList, roadDataList):

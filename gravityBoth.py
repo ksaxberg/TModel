@@ -5,6 +5,7 @@ from gravitySum import gravitySumOnEverything as gravitySum
 import sys
 import parseData
 import common
+import numpy as np
 
 
 if __name__=="__main__":
@@ -27,7 +28,7 @@ if __name__=="__main__":
     m, b, _ = singleRegression(exampleRow, roadDataList)
     ####    End
 
-    r2SumValues, interceptSumValues = gravitySum(pop, keys, dist, roadData)
+    r2SumValues, interceptSumValues = gravitySum(pop, keys, np.array(dist), np.array(roadData))
     r2Values, interceptValues = gravity(pop, keys, dist, distList, roadDataList)
     # From Gravity
     common.plotBoth(roadDataList, r2Values, interceptValues, r2SumValues,

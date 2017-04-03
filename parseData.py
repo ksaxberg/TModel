@@ -1,4 +1,5 @@
 import numpy as np
+import common
 
 
 def parseDistance(filename):
@@ -21,7 +22,7 @@ def parseDistance(filename):
     return matrix
 
 
-def parseEdges(filename, keys, sumValues=True):
+def parseEdges(filename, keys, sumValues=True, addNoise=False, deviation=0):
     """ Parses Edges file into numpy matrix
 
     Takes an edge-wise file representation of data, and using a keyset
@@ -44,9 +45,15 @@ def parseEdges(filename, keys, sumValues=True):
             if ind1 > ind2:
                 ind1, ind2 = ind2, ind1
             if not sumValues and matrix[ind1][ind2] == 0:
-                matrix[ind1][ind2] = float(value.strip())
+                if not addNoise:
+                    matrix[ind1][ind2] = float(value.strip())
+                else:
+                    matrix[ind1][ind2] = np.random.normal(float(value.strip()), deviation*float(value.strip()))
             elif sumValues:
-                matrix[ind1][ind2] += float(value.strip())
+                if not addNoise:
+                    matrix[ind1][ind2] += float(value.strip())
+                else:
+                    matrix[ind1][ind2] += np.random.normal(float(value.strip()), deviation*float(value.strip()))
     return matrix
 
 
@@ -76,5 +83,5 @@ def parsePopulation(filename):
     with open(filename) as f:
         for i, line in enumerate(f):
             temp = line.strip().split(',')
-            d[i] = [float(temp[1].strip()), temp[0].strip()]
+            d[i] = [float(temp[1].strip()) , temp[0].strip()]
     return d
