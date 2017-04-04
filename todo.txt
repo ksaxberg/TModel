@@ -1,4 +1,0 @@
-- Need to add in true logging to processing
-- Need to track down where modification is going awry
-
-- Refactor the heck out of this code

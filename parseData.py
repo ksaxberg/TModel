@@ -5,7 +5,7 @@ import common
 def parseDistance(filename):
     """ Parses Distance file into numpy matrix
 
-    Parses a csv matrix from file, assumes no headers
+    Parses a CSV Matrix from file, assumes no headers
     Returns a numpy matrix. Returns full matrix from file
     """
     with open(filename) as f:
@@ -32,7 +32,11 @@ def parseEdges(filename, keys, sumValues=True, addNoise=False, deviation=0):
     representation contains duplicates that should be added, sumValues=False,
     or that should be ignored, sumValues=True. Default is True, only the first
     value encountered will be used for each pair.
-    Note: No edge-wise pair may have a value of zero.
+    Note: No edge-wise pair may have a value of zero
+
+    AddNoise parameter indicates pertubation of the dataset, that the edge
+    values will be treated as the average where the std deviation is set 
+    as a percentage value, 1 being 100%, of each number. 
     """
     matrix = np.zeros([len(keys), len(keys)])
     with open(filename) as f:
