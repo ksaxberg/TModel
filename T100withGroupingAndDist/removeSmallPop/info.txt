@@ -30,6 +30,32 @@ Goals:
      refiltering from the initial dataset. Was able to get a dataset that
      required only 1 distance modification. 
 
+    Node: only dealing with roughly 20 airports here
+    Adding population to registered hub nodes, already looking at hub nodes. 
+    LAX: Hub
+    PHX: Hub
+    SAN: Hub
+    SFO: Hub
+    DEN: Hub
+    MIA: hub
+    FLL: Hub
+    MCO: Hub
+    ATL: Hub
+    ORD: Hub
+    DTW: Hub
+    MSP: Hub
+    IAH: Hub
+    DFW: Hub
+    CLT: Hub
+    LGA: Hub
+    PHL: Hub
+    EWR: Hub
+    DCA: Hub
+    LAS: Not a hub!
+    BOS: Hub
+    SEA: Hub
+    IAD: Hub
+    SLC: Hub
 
 
 

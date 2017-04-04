@@ -1,11 +1,10 @@
 import numpy as np
-import common
 
 
 def parseDistance(filename):
     """ Parses Distance file into numpy matrix
 
-    Parses a CSV Matrix from file, assumes no headers
+    Parses a csv matrix from file, assumes no headers
     Returns a numpy matrix. Returns full matrix from file
     """
     with open(filename) as f:
@@ -22,7 +21,7 @@ def parseDistance(filename):
     return matrix
 
 
-def parseEdges(filename, keys, sumValues=True, addNoise=False, deviation=0):
+def parseEdges(filename, keys, sumValues=True):
     """ Parses Edges file into numpy matrix
 
     Takes an edge-wise file representation of data, and using a keyset
@@ -32,11 +31,7 @@ def parseEdges(filename, keys, sumValues=True, addNoise=False, deviation=0):
     representation contains duplicates that should be added, sumValues=False,
     or that should be ignored, sumValues=True. Default is True, only the first
     value encountered will be used for each pair.
-    Note: No edge-wise pair may have a value of zero
-
-    AddNoise parameter indicates pertubation of the dataset, that the edge
-    values will be treated as the average where the std deviation is set 
-    as a percentage value, 1 being 100%, of each number. 
+    Note: No edge-wise pair may have a value of zero.
     """
     matrix = np.zeros([len(keys), len(keys)])
     with open(filename) as f:
@@ -49,15 +44,9 @@ def parseEdges(filename, keys, sumValues=True, addNoise=False, deviation=0):
             if ind1 > ind2:
                 ind1, ind2 = ind2, ind1
             if not sumValues and matrix[ind1][ind2] == 0:
-                if not addNoise:
-                    matrix[ind1][ind2] = float(value.strip())
-                else:
-                    matrix[ind1][ind2] = np.random.normal(float(value.strip()), deviation*float(value.strip()))
+                matrix[ind1][ind2] = float(value.strip())
             elif sumValues:
-                if not addNoise:
-                    matrix[ind1][ind2] += float(value.strip())
-                else:
-                    matrix[ind1][ind2] += np.random.normal(float(value.strip()), deviation*float(value.strip()))
+                matrix[ind1][ind2] += float(value.strip())
     return matrix
 
 
@@ -75,7 +64,8 @@ def makeKeys(filename):
         for i, line in enumerate(f):
             key = line.strip().split(',')[0].strip()
             d[key] = i
-    return d.copy()
+            d[i] = key
+    return d
 
 
 def parsePopulation(filename):
@@ -87,5 +77,5 @@ def parsePopulation(filename):
     with open(filename) as f:
         for i, line in enumerate(f):
             temp = line.strip().split(',')
-            d[i] = [float(temp[1].strip()) , temp[0].strip()]
+            d[i] = [float(temp[1].strip()), temp[0].strip()]
     return d

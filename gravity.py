@@ -5,111 +5,35 @@ import parseData
 import common
 
 
-def formatRawMatrices(pop, dist):
+def gravityOnEverything(pop, keys, distMatrix, distList, roadDataList):
     """ Creates a list of population products
-
+    
     Takes the population and distance matrices, creates the matrix
     of distance products for each non-zero entry in the distance matrix.
     Returns the list of such a matrix.
     """
     dim = len(pop.keys())
     # Find non-zero indices first, create shortlist
-    gravitys = np.ones([dim, dim])
-    gravitys *= -1
+    popProd = np.ones([dim, dim])
+    popProd *= -1
     for i in range(dim):
         for j in range(i, dim):
-            if dist[i][j] != 0:
-                gravitys[i][j] = pop[i][0]*pop[j][0]
+            if distMatrix[i][j] != 0:
+                popProd[i][j] = pop[i][0]*pop[j][0]
     # is the same as the above in terms of element ordering
-    gravityList = [i for i in gravitys.flat if i != -1] 
-    return gravityList
-
-
-def singleRegression(gravityValues, travelValues):
-    """
-    Runs through a single regression, assuming that the gravity values 
-    are calculated with alpha and beta already
-    """
-    #factor = min([math.log(j, 10) for j in gravityValues])
-    #gravityValues = [j/(10**factor) for j in gravityValues]
-    #slope, intercept = common.linRegress(gravityValues, travelValues)
-    #predicted = [slope*x+intercept for x in gravityValues]
-    #slope = slope/ (10**factor)
-    #r2 = common.rSquared(predicted, travelValues)
-    slope, intercept = common.linRegress(gravityValues, travelValues)
-    predicted = [slope*x+intercept for x in gravityValues]
-    r2 = common.rSquared(predicted, travelValues)
-    return slope, intercept, r2
+    popProdList = [i for i in popProd.flat if i != -1] 
     
+    slopeValues = np.zeros([common.alphaSize(), common.betaSize()]) 
+    interceptValues = np.zeros([common.alphaSize(), common.betaSize()]) 
+    r2values = np.zeros([common.alphaSize(), common.betaSize()]) 
 
-def runGravity(travel, gravitys, distance, alpha=1):
-    """ Start with population product in gravity matrix
+    for i, alpha in enumerate(common.alphaIterate()):
+        for j, beta in enumerate(common.betaIterate()):
+            gravityBeta = [x**alpha/(distList[k]**beta) for k, x
+                           in enumerate(popProdList)]
+            slope, intercept, r2= common.singleRegression(gravityBeta, roadDataList)
+            slopeValues[i][j] = slope
+            interceptValues[i][j] = intercept
+            r2values[i][j] = r2
 
-    Now run over beta values, divide by distance^beta
-    Dumping values into a matrix with beta, K, R^2
-    after regression with the travel data.
-    Assuming desired regression orientation: Travel = m*Gravity + b
-    """
-    M = np.zeros([common.numBetaEntries(), 5])
-    for i, beta in enumerate(common.betaIterate()):
-        gravityBeta = [(x**alpha/(distance[j]**beta)) for j, x
-                       in enumerate(gravitys)]
-        M[i][0], M[i][1] = beta, alpha
-        M[i][2], M[i][3], M[i][4] = singleRegression(gravityBeta, travel)
-    return M
-
-def gravityOnEverything(pop, keys, distMatrix, distList, roadDataList):
-    gravityList = formatRawMatrices(pop, distMatrix)
-    
-    r2values = []
-    interceptValues = []
-    for alpha in common.alphaIterate():
-        analysis = runGravity(roadDataList, gravityList, distList, alpha)
-        this_r2 = []
-        this_intercept = []
-        for line in analysis:
-            this_r2.append(line[4])
-            this_intercept.append(math.log(abs(line[3]), 10))
-        r2values.append(this_r2)
-        interceptValues.append(this_intercept)
-    return [r2values, interceptValues]
-
-
-if __name__ == '__main__' and len(sys.argv) == 4:
-    """
-    Runs the basic gravity law analysis on the data given, from files
-    whose names are command line arguments.
-    """
-    # Matrix Form
-    # pop = parseData.parsePopulation(sys.argv[1])
-    # dist = parseData.parseDistance(sys.argv[2])
-    # roadData = parseData.parseDistance(sys.argv[3])
-    # Edgewise form
-    pop = parseData.parsePopulation(sys.argv[1])
-    keys = parseData.makeKeys(sys.argv[1])
-
-    dist = parseData.parseEdges(sys.argv[2], keys)
-    distList = [i for i in dist.flat if i != 0]
-
-    roadData = parseData.parseEdges(sys.argv[3], keys)
-    roadDataList = [i for i in roadData.flat if i != 0]
-
-    gravityList = formatRawMatrices(pop, dist)
-
-    print("{}\nGravity\n{}\n".format("-"*25, "-"*25))
-    print("Beta, alpha, slope, intercept, R^2")
-    r2values = []
-    interceptValues = []
-    for alpha in common.alphaIterate():
-        analysis = runGravity(roadDataList, gravityList, distList, alpha)
-        this_r2 = []
-        this_intercept = []
-        for line in analysis:
-            this_r2.append(line[4])
-            this_intercept.append(math.log(abs(line[3]), 10))
-            print("{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.3e}".format(
-                  line[0], line[1], line[2], line[3], line[4]))
-        r2values.append(this_r2)
-        interceptValues.append(this_intercept)
-    common.makePlot(roadDataList, r2values, interceptValues, 'Gravity', 
-                    '{} Basic Gravity'.format(sys.argv[1].split('/')[0]))
+    return [slopeValues, interceptValues, r2values]

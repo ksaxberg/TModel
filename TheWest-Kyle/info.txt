@@ -1,4 +1,590 @@
-http://www.fhwa.dot.gov/policyinformation/hpms/shapefiles.cfm
+Heuristic used: take average of lower half of data. 
+  - Though Tulsa meets the critereon, Oklahoma didn't have data for I44 
+    between Oklahoma City and Tulsa available. Thus Tulsa was removed from
+    the map.
 
-Shapefiles that could yield all AADT data for interstate roads, worth lookin
-at
+
+
+Collecting for populations where metropolitan area exceeds 500,000 people.
+
+
+Used the Flowband AADT map for Texas
+
+Specific Notes on Data Collection Listed By Location
+Listing traffic data by (north, south, total) or (east, west, total)
+  -  losing direction of city here......
+
+    Seattle to Spokane
+        -Collecting along I90, past junction with I82
+                         R042: (7854, 7903, 15757)
+                         R055: (5833, 6010, 11843)
+                          P10: (5528, 5627, 11155)
+                         R014: (9452, 9480, 18942)
+
+    Seattle to Portland
+        -Collecting in WA along I5, Lots of in-city traffic here on first part
+                         R092: (75840, 72395, 148229)
+                         R091: (62704, 62180, 124884)
+                         R097: (37748, 36775, 74553)
+                         R104: (31918, 31605, 63523)
+                         R115: (32838, 33032, 65870)
+                         R109: (44042, 44395, 88428)
+        -Collecting in OR along I5
+            -Right on border, seems unnecessary
+
+    Portland to Spokane
+        -Collecting in OR from 2012 AADT data on stretch East from Portland
+         on I84
+            21100
+            18100
+            20700
+            23200
+            20200
+            20100
+            10800
+            10300
+            10600
+            18000
+            13400
+            14900
+            17900
+        -Collecting in WA on stretch of I82 from Oregon
+            Route ID 082, after milepost 131: (19000)
+            Route ID 082, after milepost 123: (19000)
+            Route ID 082, after milepost 114: (19000)
+        -Collecting in WA on stretch of US Highway 395
+            Route ID 395, after milepost 30: (16000)
+            Route ID 395, after milepost 36: (15000)
+            Route ID 395, after milepost 55: (8000)
+            Route ID 395, after milepost 65: (7900)
+            Route ID 395, after milepost 87: (8100)
+            Route ID 395, after milepost 94: (8100)
+            //Juncture with I90, lots of crosstraffic
+
+
+                         
+
+
+    Seattle to Boise
+        -Collecting in WA on stretch of I90, I82
+            I90: markers S901: (16251, 15872, 32164)
+                         S903: (15194, 14952, 30180)
+            I82: marker   P08: (13380, 13429, 26806)
+            Further:     R086: (10123, 10299, 20506)
+                          P09: (9550, 9406, 18942)
+        -Collecting in OR on I84, Has wishy-washy color map, total AADT count
+            I84 station 30-026: (11000)
+                        01-011: (10100)
+                        01-013: (9400)
+                        01-014: (9500)
+                        23-016: (9700)
+
+        -Collecting in ID on I84
+            -Really small segment, only urban. 
+
+
+    Boise to Ogden
+        - Collecting in ID
+            Markers:  71: (16120)
+                       7: (21065)
+                      66: (19901)
+                      89: (8701)
+                      30: (8677)
+                     101: (7723)
+        - Collecting in UT
+            Stations: Unknown, recovered from marked map of 2015 AADT on I84
+                      (7685)
+                      (7695)
+                      (7710)
+                      (7855)
+                      (7925)
+                      (8145)
+                --Ignoring stretch of road in Bringham City (urban traffic I15)
+                      (42010)
+                      (44755)
+
+    Ogden to Salt Lake City
+        // Absolutely rife with urban traffic
+        - Collecting from UT marked map of 2015 AADT on I15
+                101710
+                114365
+                103605
+                98960
+                92470
+                114425
+                122775
+    Salt Lake City to Provo
+        // Also confounded by urban traffic
+        - Collecting from UT marked map of 2015 AADT along I15
+                134820
+                128475
+                133650
+                146660
+
+    Salt Lake City to Reno
+        - Collecting from UT marked map of 2015 AADT along I80
+            9725
+            8130
+            8010
+            7640
+            7540
+            7010
+        - Collecting from NV, Elko County along I80
+            Elko County: 007
+            Station ID 0070371: (4700)
+            Station ID 0070244: (5300)
+            Station ID 0070185: (5200)
+            Station ID 0070171: (5300)
+            Station ID 0070165: (5000)
+            Station ID 0070351: (5200)
+            Station ID 0070292: (7100)
+            Station ID 0070350: (7000)
+            Station ID 0070284: (7200)
+            Station ID 0070283: (7200)
+            Station ID 0070099: (7300)
+            Station ID 0070349: (7400)
+            Station ID 0070163: (9000)
+            Station ID 0070161: (12000)
+            Station ID 0070261: (10000)
+
+        - Collecting from NV, Eureka County along I80
+            Eureka County: 011
+            Station ID 0110009: (7200)
+            Station ID 0110056: (7600)
+            Station ID 0110018: (7500)
+
+        - Collecting from NV, Churchill County along I80
+            Churchill County: 001
+            Station ID 0010093: (8400)
+
+    Provo to Vegas
+        - Collecting from UT marked map of 2015 AADT along I15
+            44480
+            33940
+            31320
+            22025
+            21525
+            20115
+            14115
+            14320
+            14280
+            12890
+            12475
+            12410
+            11625
+            11740
+           -- Reached Juncture with I70
+            - numbers actually add together quite nicely here
+
+    Denver to Vegas
+        - Collecting from UT marked map of 2015 AADT along I70
+            6765
+            6745
+            6430
+            3350
+            3290
+            3310
+            5230
+            4525
+            4490
+       // ignoring driving denver to provo
+
+    Reno to Las Vegas
+        - Collecting from NV, Mineral County along state 95
+            Mineral County: 021
+            Station 0005: (3600)
+            Station 0016: (2900)
+            Station 0027: (2600)
+            Station 0030: (2200)
+        - Collecting from NV, Esmeralda County along state 95
+            Esmeralda County: 009
+            Station 0018: (2000)
+            Station 0013: (2300)
+            Station 0006: (2300)
+            Station 0005: (2300)
+        - Collecting from NV, Nye County along state 95
+            Nye County: 
+            Station 0029: (2600)
+            Station 0019: (3000)
+            Station 0012: (3000)
+
+    Las Vegas to Phoenix
+       - Collecting from AZ, Along State 93
+            Station ID 102085: (14773)
+            Station ID 102086: (13757)
+            Station ID 102090: (7541)
+            Station ID 102091: (7386)
+            Station ID 102092: (7791)
+            Station ID 102093: (8864)
+            //At Wickenburg, have several other roads coming in adding flow
+
+    Phoenix to Tucson
+        - Collecting from AZ, along I10
+            Station ID 100124: (55477)
+            Station ID 100125: (59299)
+            Station ID 100126: (43390)
+            Station ID 100127: (42029)
+            Station ID 100128: (44770)
+            // Have reached juncture with I8, values should increase slightly
+            Station ID 100131: (44680)
+            Station ID 100132: (35405)
+            Station ID 100133: (41998)
+            Station ID 100135: (50865)
+            Station ID 100136: (42061)
+            Station ID 100137: (47933)
+            Station ID 100138: (45185)
+
+
+    Phoenix to Albuquerque 
+        - Collecting from AZ, along I40
+            //Starting after Holbrook, as both optimal routes end up here
+            Station ID 100567: (16838)
+            Station ID 100568: (17515)
+            Station ID 100569: (16120)
+            Station ID 100570: (16130)
+            Station ID 100571: (16337)
+            Station ID 100573: (16231)
+            Station ID 100574: (16780)
+            Station ID 100575: (17268)
+            Station ID 100576: (16796)
+            Station ID 100580: (17785)
+            Station ID 100581: (18258)
+            Station ID 100582: (18149)
+            Station ID 100583: (17578)
+        - Collecting from NM, along I40
+            Traffic Seg ID 1611: (9120, 8295, 17451)
+            Traffic Seg ID 1619: (7770, 7242, 15012)
+            Traffic Seg ID 1639: (5903, 6069, 11962)
+            Traffic Seg ID 1651: (7083, 6660, 13743)
+            Traffic Seg ID 1765: (7721, 8121, 15842)
+            Traffic Seg ID 1797: (8622, 8859, 17481)
+            Traffic Seg ID 1801: (7890, 7685, 15575)
+            //Reached road juncture, have traffic buildup
+
+
+    Tucson to El Paso
+        - Collecting from AZ, along I10
+            Station ID 100171: (28806)
+            Station ID 100172: (30035)
+            Station ID 100173: (27576)
+            Station ID 100174: (25449)
+            Station ID 100175: (31194)
+            Station ID 100179: (16418)
+            Station ID 100180: (18450)
+            Station ID 100181: (14494)
+            Station ID 100182: (14270)
+            Station ID 100183: (15973)
+            Station ID 100186: (14136)
+            Station ID 100187: (12573)
+            Station ID 100188: (14818)
+            Station ID 100189: (13346)
+            Station ID 100190: (12493)
+            Station ID 100192: (13238)
+            Station ID 100193: (13860)
+        - Collecting from NM, along I10
+            Traffic Seg ID 25: (4955, 5402, 10357)
+            Traffic Seg ID 85: (6049, 5427, 11476)
+            Traffic Seg ID 109: (8210, 5855, 14065)
+            Traffic Seg ID 111: (6143, 5691, 11834)
+            Traffic Seg ID 159: (5359, 4953, 10312)
+            Traffic Seg ID 187: (8427, 7679, 16106)
+            Traffic Seg ID 209: (8627, 9701, 18328)
+            //Reached Las Cruces, close to El Paso
+
+    Albuquerque to El Paso
+        - Collecting from NM, along I25 between Albuquerque and Las Cruces
+            Traffic Seg ID 411: (4482, 4666, 9148)
+            Traffic Seg ID 469: (2353, 2698, 5051)
+            Traffic Seg ID 521: (3135, 3476, 6611)
+            Traffic Seg ID 531: (3124, 3377, 6501)
+            Traffic Seg ID 565: (3653, 3704, 7357)
+            Traffic Seg ID 707: (5062, 6020, 11082)
+            Traffic Seg ID 757: (10767)
+
+    Albuquerque to Oklahoma City
+        - Collecting from NM, along I40
+            Traffic Seg ID 2265: (11384, 11708, 23092)
+            Traffic Seg ID 2293: (9168, 9788, 18956)
+            Traffic Seg ID 2311: (9173, 8852, 10825)
+            Traffic Seg ID 2341: (7791, 7947, 15738)
+            Traffic Seg ID 2375: (10014, 10439, 20453)
+            Traffic Seg ID 2403: (6798, 7815, 14613)
+            Traffic Seg ID 2421: (7236, 5871, 13107)
+            Traffic Seg ID 2501: (6323, 6633, 12956)
+            Traffic Seg ID 2535: (7031, 7312, 14343)
+            Traffic Seg ID 2609: (5256, 5769, 11025)
+            Traffic Seg ID 2647: (5121, 4975, 10096)
+        - Collecting from TX 2015 Flowband map, which includes an AADT overlay
+          on I40
+            12737
+            11973
+            11713
+        - Collecting from OK 2015 Statemap, which includes AADT overlay
+          on I40
+            12300
+            11700
+            12300
+            13200
+            13316
+            11900
+            18300
+            18200
+            19900
+            25400
+            22900
+            23400
+            // Reached quite an urban region here
+
+
+    Albuquerque to Colorado Springs
+        - Collecting from NM, along I25 beyond Albuquerque and Santa Fe
+            Traffic Seg ID 1235: (4256, 4373, 8629)
+            Traffic Seg ID 1251: (3841, 4243, 8057)
+            Traffic Seg ID 1259: (3955, 4386, 8341)
+            Traffic Seg ID 1299: (5658, 5915, 11573)
+            Traffic Seg ID 1311: (3774, 3914, 7688)
+            Traffic Seg ID 1385: (2525, 2989, 5514)
+            Traffic Seg ID 1433: (2367, 2600, 4967)
+            Traffic Seg ID 1485: (2266, 1405, 3671)
+            Traffic Seg ID 1591: (3924, 4373, 8197)
+            Traffic Seg ID 1593: (4690, 4356, 9046)
+        - Collecting from CO 2015 AADT Data on I25
+            Station ID 000101: (10000)
+            Station ID 100929: (10000)
+            Station ID 100934: (13000)
+            Station ID 100935: (13000)
+            Station ID 100937: (14000)
+            //Skipping past relatively large Pueblo.... maybe ignore following
+            Station ID 100955: (31000)
+            Station ID 000009: (35000)
+
+    Colorado Springs to Denver
+        - Collecting from CO 2015 AADT Data on I25
+            Station ID 100971: (131000)
+            Station ID 100972: (114000)
+            Station ID 100973: (116000)
+            Station ID 100974: (108000)
+            Station ID 100975: (96000)
+            Station ID 100976: (86000)
+            Station ID 100977: (64000)
+            Station ID 100978: (66000)
+            Station ID 106435: (67000)
+            Station ID 100979: (66000)
+            Station ID 100980: (68000)
+            Station ID 000124: (73000)
+            Station ID 100982: (86000)
+            Station ID 100983: (99000)
+            Station ID 100985: (117000)
+            Station ID 100986: (121000)
+
+
+    Denver to Kansas City
+        - Collecting from CO 2015 AADT Data on I70
+            Station ID 103108: (10000)
+            Station ID 103106: (9800)
+            Station ID 103105: (9600)
+            Station ID 103104: (9800)
+            Station ID 103103: (9900)
+            Station ID 103100: (9900)
+            Station ID 000014: (10000)
+            Station ID 103094: (12000)
+            Station ID 103092: (13000)
+            Station ID 000108: (15000)
+        - Collecting from KA 2015 Statemap, which includes AADT overlay
+          on I70
+            9630
+            9710
+            10400
+            10400
+            10700
+            10400
+            11000
+            11800
+            11500
+            11100
+            10500
+            10700
+            12100
+            12300
+            12400
+            11900
+            12200
+            // Reached I135 Running north, crosstraffic
+
+    El Paso to San Antonio
+        - Collecting from TX 2015 Flowband map, which includes an AADT overlay
+          along I10
+            10586
+            12608
+            15269
+            9818
+            5178
+            5961
+            6667
+            8126
+            9837
+            8297
+            12453
+            10304
+            12205
+            // Getting lots of urban area just outside of San Antonio
+
+    El Paso to Dallas-Fort Worth
+        - Collecting from TX 2015 Flowband map, which includes an AADT overlay
+          on I20
+            22363
+            21269
+            25589
+            25816
+            17014
+            20607
+            23672
+            11811
+            7218
+        
+
+    San Antonio to Corpus Christi
+        - Collecting from TX 2015 Flowband map, which includes an AADT overlay
+          along I37
+            21041
+            18082
+
+    Corpus Christi to McAllen
+        - Collecting from TX 2015 Flowband map, which includes an AADT overlay
+            16785
+            8277
+            11943
+            7652
+
+
+    San Antonio to Houston
+        - Collecting from TX 2015 Flowband map, which includes an AADT overlay
+          on I10
+            44596
+            38894
+            30979
+            31429
+            40665
+            56882
+
+    San Antonio to Dallas
+        - Collecting from TX 2015 Flowband map, which includes an AADT overlay
+          included Austin in San Antonio, so beyond Austin to Dallas
+            64753
+
+    Houston to Dallas
+        - Collecting from TX 2015 Flowband map, which includes an AADT overlay
+          on I45
+            45492
+            47712
+            34118
+            33422
+            31435
+            29884
+            28238
+            35252
+
+    Dallas to Oklahoma City
+        - Collecting from TX 2015 Flowband map, which includes an AADT overlay
+          on I35, after meetup of sections from Dallas and FortWorth(35W)
+            49821
+            48728
+            43137
+        - Collecting from OK 2015 Statemap, which includes AADT overlay
+          on I35
+            30800
+            31100
+            29800
+            33200
+            31800
+            36000
+            37000
+            34300
+            36000
+            34800
+            31400
+
+    Oklahoma City to Tulsa
+        - Collecting from OK 2015 Statemap, which includes AADT overlay
+          on I44
+          //TODO: doesn't appear to be any I44 measurements in Oklahoma
+          // have to leave Tulsa out because of this...
+
+    Oklahoma City to Wichita
+        - Collecting from OK 2015 Statemap, which includes AADT overlay
+          on I35
+           30000
+           23100
+           24100
+           22700
+           18800
+           20000
+           18100
+           19000
+           19300
+           19500
+           19000
+           16400
+           16400
+           16200
+           15100
+        - Collecting from KA 2015 Statemap, which includes AADT overlay
+          on I35
+           16600
+           16700
+           20500
+
+
+    Wichita to Kansas City
+        - Collecting from KA 2015 Statemap, which includes AADT overlay
+          on I35
+            14200
+            15100
+            14800
+            13400
+            13800
+            12700
+            13700
+            18500
+        
+    Kansas City to Omaha
+        - Collecting from MO 2015 Statemap, which includes AADT overlay
+          on I29 from Kansas City North
+            32772
+            31014
+            31984
+            13522
+            13295
+            14384
+            12073
+            11292
+        - Collecting from IO 2014 Statemap, which includes AADT overlay
+            12900
+            13700
+            12700
+            23800
+
+    Omaha to Denver
+        - Collecting from CO 2015 AADT Data, on I76
+            Station ID 103423: (6800)
+            Station ID 103421: (6600)
+            Station ID 103419: (7100)
+            Station ID 103417: (7200)
+            Station ID 103412: (12000)
+            Station ID 103403: (17000)
+            Station ID 103399: (12000)
+            Station ID 000010: (12000)
+
+        - Collecting from NE 2014 Statemap, which includes AADT overlay
+          on I76
+            6875
+          have juncture with I80, increases traffic values. Potentially ignore
+            14650
+            14300
+            13460
+            15400
+            15420
+            16705
+            18595
+            20710
+            21565

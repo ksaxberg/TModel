@@ -1,5 +1,5 @@
 import sys
-import math
+from math import log
 import pprint
 import numpy as np
 from gravity import *
@@ -61,18 +61,16 @@ def runDijkstra(distances, source, destination, memory):
                 PathSoFar[x] = list(PathSoFar[newMin])
                 PathSoFar[x].append(x)
     # Only adding completed routes to the memory, things in S
-    for i in S.keys():
+    for i, distance in S.items():
         if (i != source and (source, i) not in memory and
                 (i, source) not in memory):
             # Add this to memory then
             if i < source:
-                memory[(i, source)] = [S[i], PathSoFar[i]]
+                memory[(i, source)] = [distance, PathSoFar[i]]
             else:
-                memory[(source, i)] = [S[i], PathSoFar[i]]
+                memory[(source, i)] = [distance, PathSoFar[i]]
     return
 
-def makeMatrixSymmetric(matrix):
-    return matrix + matrix.T - np.diag(matrix.diagonal()) 
 
 def overLappingRoutes(distances):
     """ Runs the dijkstra algorithm on all route pairs, returns the overlap
@@ -86,38 +84,50 @@ def overLappingRoutes(distances):
     shortest path goes over the current city connection of interest, ie
     connection i, j.
     """
-    dist = makeMatrixSymmetric(distances)
+    # Make a copy of the matrix symmetric
+    dist = np.array(distances)
+    dist = dist + dist.T - np.diag(dist.diagonal()) 
+
     # Have spoiler route index -1
     size = len(dist[0])
     memory = {}
     for i in range(size):
         for j in range(i, size):
-            # Sparse Matrix - run on edges, not vertex*vertex
-            # Can't do that, miss routes
-            # Calculates how to get from A,B for every pair.
-            #if dist[i][j] != 0:
             runDijkstra(dist, i, j, memory)
     routeOverlap = [[[] for i in range(size)] for j in range(size)]
     for key, value in memory.items():
-        # For each consecutive pair in the path
-        # value is [S[i], PathSoFar[i]]
-        for i in range(len(value[1])-1):
-            r1 = min(value[1][i], value[1][i+1])
-            r2 = max(value[1][i], value[1][i+1])
+        # Suppose [City A, City D]
+        # key is [A, D], value is [distance, [A, B, C, D]]
+        # Where path A->D goes through specified edges
+        length, path = value
+
+        # Check if skip
+        if common.useGravitySumThresh:
+            # Remove from overlapping stuff here , skip over
+            if common.deleteFromOriginalNetworkSum:
+                # Removes edge if exceeds desired distance threshold
+                if common.gravitySumDistThresh < length < common.gravitySumDistThreshMinimum:
+                    continue
+            else:
+                # Leaves original edges of graph intact
+                if not len(path) == 2:
+                    # Then have a pass-through edge
+                    if common.gravitySumDistThresh < length < common.gravitySumDistThreshMinimum:
+                        continue
+            
+        for i in range(len(path)-1):
             # Store the fact that the parent route goes over edge,
             #  and total distance of the path.
-            routeOverlap[r1][r2].append((key, value[0]))
-    #TODO: Remove count of routes
+            routeOverlap[min(path[i], path[i+1])][max(path[i], path[i+1])].append((key, length))
     if DEBUG:
         count = 0
         firstFive = []
         for i in range(len(routeOverlap)):
             for j in range(len(routeOverlap[0])):
-                if routeOverlap[i][j]:
+                if (not routeOverlap[i][j]) and distances[i][j] != 0:
                     count += 1
-                elif distances[i][j] != 0:
                     firstFive.append((i, j, distances[i][j]))
-        print("Count of overlapping routes returned: {}".format(count))
+        print("Count of routes not being used: {}".format(count))
         print("Route samples:")
         for i in range(min(5, len(firstFive))):
             print("\t{0}, {1}, {2}".format(firstFive[i][0], firstFive[i][1], firstFive[i][2]))
@@ -129,106 +139,65 @@ def overLappingRoutes(distances):
     return routeOverlap
 
 
-def convertRoutesToList(overlaps, pops, beta, alpha):
-    # Constant factor K will have to be multiplied on the size
-    partialGravities = np.ones([len(overlaps), len(overlaps)])
-    partialGravities *= -1
-    for i, row in enumerate(overlaps):
-        for j, col in enumerate(row):
-            if not col:
-                continue
-            else:
-                # Reset to zero if have values to add
-                partialGravities[i][j] = 0
-            for x in col:
-                # For each x, add the partial gravity
-                val = (pops[x[0][0]][0])*(pops[x[0][1]][0])
-                val = val**alpha
-                distance = x[1]**beta
-                partialGravities[i][j] += val/distance
-    return partialGravities
 
+def gravitySumOnEverything(pop, keys, distMatrix, roadData):
+    # Helper function for gravity calculation
+    def convertRoutesToList(overlaps, pops, beta, alpha):
+        # Constant factor K will have to be multiplied on the size
+        partialGravities = np.ones([len(overlaps), len(overlaps)])
+        partialGravities *= -1
+        for i, row in enumerate(overlaps):
+            for j, col in enumerate(row):
+                if not col:
+                    continue
+                else:
+                    # Reset to zero if have values to add
+                    partialGravities[i][j] = 0
+                for x in col:
+                    # For each x, add the partial gravity
+                    # x = [[A, B], distance]
+                    partialGravities[i][j] += ((pops[x[0][0]][0])*(pops[x[0][1]][0])**alpha)/(x[1]**beta)
+        return [x for x in partialGravities.flat if x != -1]
 
-def gravitySum(pop, distances, roadData):
-    # Making the distance matrix symmetric
-    # Should already be upper triangular,
-    # wrote overlap to not care about lower half
-    overlap = overLappingRoutes(distances)
-    # Need to format into 3 lists, RoadData, Gravity, Distance
-    # All indexed in order
-    roadDataList = [x for x in roadData.flat if (x != 0)]
-    r2values = []
-    interceptValues = []
-    for alpha in common.alphaIterate():
-        this_r2 = []
-        this_intercept = []
-        for beta in common.betaIterate():
-            partialGravities = convertRoutesToList(overlap, pop, beta, alpha)
-            partialList = [x for x in partialGravities.flat if x != -1]
-
-            # Remove the common factor, reducing numerical error
-            #factor = min([math.log(j, 10) for j in partialList])
-            #partialList = [j/(10**factor) for j in partialList]
-
-            slope, intercept = common.linRegress(partialList, roadDataList)
-            # Calculate prediction on current pathed values
-            this_intercept.append(math.log(abs(intercept), 10))
-            predicted = [slope*x + intercept for x in partialList]
-            r2 = common.rSquared(predicted, roadDataList)
-            this_r2.append(r2)
-            #slope = slope / (10**factor)
-            print("{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.3e}".format(beta, alpha,
-                  slope, intercept, r2))
-        r2values.append(this_r2)
-        interceptValues.append(this_intercept)
-    common.makePlot(roadDataList, r2values, interceptValues, 'GravitySum', '{} Gravity Sum'.format(sys.argv[1].split('/')[0]))
-
-
-def gravitySumOnEverything(pop, keys, distMatrix, roadDataList):
     # Making the distance matrix symmetric
     # Should already be upper triangular,
     # wrote overlap to not care about lower half
     overlap = overLappingRoutes(distMatrix)
     # Need to format into 3 lists, RoadData, Gravity, Distance
     # All indexed in order
-    r2values = []
-    interceptValues = []
-    for alpha in common.alphaIterate():
-        this_r2 = []
-        this_intercept = []
-        for beta in common.betaIterate():
-            partialGravities = convertRoutesToList(overlap, pop, beta, alpha)
-            partialList = [x for x in partialGravities.flat if x != -1]
+    distMatrix = np.array(distMatrix)
+    roadData = np.array(roadData)
+    if common.useGravitySumThresh:
+        # Remove components from roadDataList if not in overlap
+        for i, row in enumerate(overlap):
+            for j, cell in enumerate(row):
+                if len(cell) == 0:
+                    roadData[i][j] = 0
+    roadDataList = [x for x in roadData.flat if x != 0]
+    #r2values = [] 
+    #interceptValues = []
 
-            # Remove the common factor, reducing numerical error
-            #factor = min([math.log(j, 10) for j in partialList])
-            #partialList = [j/(10**factor) for j in partialList]
-
-            if DEBUG: print("Length of partial: {}\nLength of roadDataList: {}".format(len(partialList), len(roadDataList)))
-            slope, intercept = common.linRegress(partialList, roadDataList)
+    #for alpha in common.alphaIterate():
+    #    this_r2 = []
+    #    this_intercept = []
+    #    for beta in common.betaIterate():
+    #        partialList = convertRoutesToList(overlap, pop, beta, alpha)
+    #        slope, intercept, r2= common.singleRegression(partialList, roadDataList)
+    #        # Calculate prediction on current pathed values
+    #        this_intercept.append(math.log(abs(intercept), 10))
+    #        this_r2.append(r2)
+    #    r2values.append(this_r2)
+    #    interceptValues.append(this_intercept)
+    #return [r2values, interceptValues]
+    slopeValues = np.zeros([common.alphaSize(), common.betaSize()]) 
+    interceptValues = np.zeros([common.alphaSize(), common.betaSize()]) 
+    r2values = np.zeros([common.alphaSize(), common.betaSize()]) 
+    for i, alpha in enumerate(common.alphaIterate()):
+        for j, beta in enumerate(common.betaIterate()):
+            partialList = convertRoutesToList(overlap, pop, beta, alpha)
+            slope, intercept, r2= common.singleRegression(partialList, roadDataList)
             # Calculate prediction on current pathed values
-            this_intercept.append(math.log(abs(intercept), 10))
-            predicted = [slope*x + intercept for x in partialList]
-            r2 = common.rSquared(predicted, roadDataList)
-            this_r2.append(r2)
-            #slope = slope / (10**factor)
-        r2values.append(this_r2)
-        interceptValues.append(this_intercept)
-    return [r2values, interceptValues]
-
-
-if __name__ == '__main__' and (len(sys.argv) == 4):
-        # Matrix Form
-        # pop = parseData.parsePopulation(sys.argv[1])
-        # dist = parseData.parseDistance(sys.argv[2])
-        # roadData = parseData.parseDistance(sys.argv[3])
-        # gravitySum(pop, dist, roadData)
-
-        # Edgewise Form, simply builds matrices for now
-        pop = parseData.parsePopulation(sys.argv[1])
-        keys = parseData.makeKeys(sys.argv[1])
-        dist = parseData.parseEdges(sys.argv[2], keys)
-        roadData = parseData.parseEdges(sys.argv[3], keys)
-        print("{}\nGravity Sum\n{}\n".format("-"*25, "-"*25))
-        print("Beta, Alpha, Slope, Intercept, R^2")
-        gravitySum(pop, dist, roadData)
+            slopeValues[i][j] = slope
+            interceptValues[i][j] = intercept
+            r2values[i][j] = r2
+    return [slopeValues, interceptValues, r2values]
