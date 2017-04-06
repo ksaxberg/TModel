@@ -106,13 +106,13 @@ def overLappingRoutes(distances):
             # Remove from overlapping stuff here , skip over
             if common.deleteFromOriginalNetworkSum:
                 # Removes edge if exceeds desired distance threshold
-                if common.gravitySumDistThresh < length < common.gravitySumDistThreshMinimum:
+                if common.gravitySumDistThresh < length  or length < common.gravitySumDistThreshMinimum:
                     continue
             else:
                 # Leaves original edges of graph intact
                 if not len(path) == 2:
                     # Then have a pass-through edge
-                    if common.gravitySumDistThresh < length < common.gravitySumDistThreshMinimum:
+                    if common.gravitySumDistThresh < length  or length < common.gravitySumDistThreshMinimum:
                         continue
             
         for i in range(len(path)-1):

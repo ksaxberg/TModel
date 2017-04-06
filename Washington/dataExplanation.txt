@@ -1,4 +1,0 @@
-This is a test dataset for the state of Washington, including cities with 
-population estimates of over 50,000 people. 
-
-Roads: Interstates

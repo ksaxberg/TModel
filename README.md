@@ -47,16 +47,12 @@ Explanation of files:
 	The file common.py contains a list of parameters to vary to change the
 	graphical output, alpha and beta iteration values. gravityBoth.py is 
 	intended as a command line interface for gravity.py and gravitySum.py.
+    ParseData includes an option for adding noise to edge values as follows:
 
-
-	addNoise.py is called as follows:
-	  python addNoise.py ./test/roadData.txt .2 	
-	The first parameter is the road data set, where the second is the 
-	percentage variation. In this case, 20% variation. Every listed edge
-	value is treated as the mean for a standard normal, and the variation
-	is this percentage value multiplied by the mean. This is intended to 
-	verify model robustness in the face of data pertubation. The AADT
-	road data is known to have variable collection quality, and having 
+	Every listed edge value is treated as the mean for a standard normal, 
+    and the variation is this percentage value multiplied by the mean. This 
+    is intended to verify model robustness in the face of data pertubation. 
+    The AADT road data is known to have variable collection quality, and having
 	model calibration resistent to mild pertubation is indicative of the
 	applicability of the model. 
 

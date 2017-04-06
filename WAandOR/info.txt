@@ -1,6 +1,0 @@
-This is a collection of AADT dataset for the cities in Oregan and Washington
-whose population exceeds 50,000 people. This only included 6 cities in Oregon
-and 8 cities in Washington. Populations were retrieved from Wikipedia, with the 
-road data benchmarked off of the 2015 Oregan State Department of Transportation 
-AADT dataset and the 2015 Washington State Department of Transportation AADT 
-data.

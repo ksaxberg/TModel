@@ -9,18 +9,18 @@ import numpy as np
 import math
 
 DEBUG = False
-gravityFactorForNumErr = 1.0/100000.0
+gravityFactorForNumErr = 1.0/1000000.0
 alphaMin = 0.1
 alphaMax = 2 
-alphaExample = .5 
+alphaExample = .2 
 betaMin = 0.1 
 betaMax = 3
-betaExample = 0.8
+betaExample =1 
 stepValueAlpha = 0.1
 stepValueBeta = 0.1
 useGravitySumThresh = True
 deleteFromOriginalNetworkSum = False
-gravitySumDistThresh = 500 
+gravitySumDistThresh = 300 
 gravitySumDistThreshMinimum = 0 
 
 

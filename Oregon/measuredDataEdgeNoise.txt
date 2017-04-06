@@ -1,8 +1,0 @@
-Portland,  Salem, 125476
-Salem,  Albany, 64300
-Albany,  Eugene, 35527
-Eugene,  Medford, 21207
-Medford,  Bend, 462
-Albany,  Bend, 1064
-Salem,  Bend, 4534
-Portland,  Bend, 3540

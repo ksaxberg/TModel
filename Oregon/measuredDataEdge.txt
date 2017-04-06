@@ -1,8 +1,0 @@
-Portland, Salem, 120000
-Salem, Albany, 62000
-Albany, Eugene, 40000
-Eugene, Medford, 20000
-Medford, Bend, 400
-Albany, Bend, 1200
-Salem, Bend, 4200
-Portland, Bend, 4600
