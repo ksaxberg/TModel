@@ -18,6 +18,13 @@ def gravityBoth(popFile, distFile, roadFile, titleString = " ", filename="img"):
 
     slopeSumValues, interceptSumValues, r2SumValues , gravitySumEstimate= gravitySum(pop, keys, np.array(dist), np.array(roadData), retExample=True)
     slopeValues, interceptValues, r2Values, gravityEstimate = gravity(pop, keys, dist, distList, np.array(roadDataList), retExample=True)
+    if not gravityEstimate:
+        print( "Gravity Estimate has no values")
+        return
+    if not gravitySumEstimate:
+        print( "Gravity Sum Estimate has no values")
+        return
+
     # From Gravity
     common.plotBoth(roadDataList, 
         r2Values, 

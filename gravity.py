@@ -28,10 +28,11 @@ def gravityOnEverything(pop, keys, distMatrix, distList, roadDataList, retExampl
     interceptValues = np.zeros([common.alphaSize(), common.betaSize()]) 
     r2values = np.zeros([common.alphaSize(), common.betaSize()]) 
     exampleRow = []
+
     for i, alpha in enumerate(common.alphaIterate()):
         for j, beta in enumerate(common.betaIterate()):
             gravityBeta = [x**alpha/(distList[k]**beta) for k, x in enumerate(popProdList)]
-            if retExample and alpha == common.alphaExample and beta == common.betaExample:
+            if retExample and np.isclose(alpha,common.alphaExample) and np.isclose(beta,common.betaExample):
                 exampleRow = gravityBeta
             slope, intercept, r2= common.singleRegression(gravityBeta, roadDataList)
             slopeValues[i][j] = slope

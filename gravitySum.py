@@ -156,7 +156,7 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadData, retExample=False):
                 for x in col:
                     # For each x, add the partial gravity
                     # x = [[A, B], distance]
-                    partialGravities[i][j] += ((pops[x[0][0]][0])*(pops[x[0][1]][0])**alpha)/(x[1]**beta)
+                    partialGravities[i][j] += ((pops[x[0][0]][0]*pops[x[0][1]][0])**alpha)/(x[1]**beta)
         return [x for x in partialGravities.flat if x != -1]
 
     # Making the distance matrix symmetric
@@ -167,7 +167,7 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadData, retExample=False):
     # All indexed in order
     distMatrix = np.array(distMatrix)
     roadData = np.array(roadData)
-    if common.useGravitySumThresh:
+    if common.useGravitySumThresh and common.deleteFromOriginalNetworkSum:
         # Remove components from roadDataList if not in overlap
         for i, row in enumerate(overlap):
             for j, cell in enumerate(row):
@@ -181,7 +181,7 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadData, retExample=False):
     for i, alpha in enumerate(common.alphaIterate()):
         for j, beta in enumerate(common.betaIterate()):
             partialList = convertRoutesToList(overlap, pop, beta, alpha)
-            if retExample and alpha == common.alphaSumExample and beta == common.betaSumExample:
+            if retExample and np.isclose(alpha, common.alphaSumExample) and np.isclose(beta, common.betaSumExample):
                 exampleRow = partialList
             slope, intercept, r2= common.singleRegression(partialList, roadDataList)
             # Calculate prediction on current pathed values

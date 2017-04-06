@@ -10,7 +10,6 @@ import math
 
 #### Parameters for manipulation
 DEBUG = False
-gravityFactorForNumErr = 1.0/1000000.0
 alphaMin = 0.1
 alphaMax = 2 
 alphaExample = 0.2 
@@ -23,7 +22,7 @@ stepValueAlpha = 0.1
 stepValueBeta = 0.1
 useGravitySumThresh = True
 deleteFromOriginalNetworkSum = False
-gravitySumDistThresh = 1 
+gravitySumDistThresh = 400 
 gravitySumDistThreshMinimum = 0 
 #### End
 
@@ -80,11 +79,13 @@ def singleRegression(x, y):
     #predicted = [slope*i + intercept for i in x]
     #r2 = rSquared(predicted, y)
     #return slope, intercept, r2
-    adjust = [gravityFactorForNumErr*i for i in x]
+    expForFactor = math.floor(min([math.log(i, 10) for i in x]))
+    factor = 1/(10**expForFactor)
+    adjust = [factor*i for i in x]
     slope, intercept = linRegress(adjust, y)
     predicted = [slope*i + intercept for i in adjust]
     r2 = rSquared(predicted, y)
-    return (slope*gravityFactorForNumErr), intercept, r2
+    return (slope*factor), intercept, r2
 
 
 def plotBoth(roadDataList, z, slope, intercept, zSum, slopeSum, interceptSum, name="img", titleString="", rowExampleGravity=[], rowExampleSumGravity=[]):
