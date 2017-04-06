@@ -9,7 +9,6 @@ import numpy as np
 import math
 
 DEBUG = False
-<<<<<<< HEAD
 gravityFactorForNumErr = 1.0/1000000.0
 alphaMin = 0.1
 alphaMax = 2 

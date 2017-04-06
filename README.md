@@ -33,7 +33,7 @@ Explanation of data and collection techniques:
     connecting two places of interest, some datasets include an average of the 
     lowest 3-5 AADT values and others include a number representing the lower
     part of the distribution of values along the stretch of road, usually 
-    around the first quantile. The "addNoise.py" file is included to give 
+    around the first quantile. The "addNoise" feature in parseData is included to give 
     support to the idea that the trends seen are resistent to mild pertubation
     of the actual road data values, that the exact data is not necessary.
     A more complete list of heuristics used is being developed with "TheWest"
@@ -70,9 +70,3 @@ Explanation of files:
 
 	clean.sh:
 	Simple intended to remove compiled python files as well as images.
-
-	
-	network.py is only partially implemented, intented to be an object
-	oriented approach to running the model through python, rather than
-	command line scripting. This is intended to ease in the querrying 
-	of the calibrated model.	
