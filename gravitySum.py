@@ -181,7 +181,7 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadData, retExample=False):
     for i, alpha in enumerate(common.alphaIterate()):
         for j, beta in enumerate(common.betaIterate()):
             partialList = convertRoutesToList(overlap, pop, beta, alpha)
-            if retExample and alpha == common.alphaExample and beta == common.betaExample:
+            if retExample and alpha == common.alphaSumExample and beta == common.betaSumExample:
                 exampleRow = partialList
             slope, intercept, r2= common.singleRegression(partialList, roadDataList)
             # Calculate prediction on current pathed values

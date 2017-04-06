@@ -12,6 +12,7 @@ def gravityOnEverything(pop, keys, distMatrix, distList, roadDataList, retExampl
     of distance products for each non-zero entry in the distance matrix.
     Returns the list of such a matrix.
     """
+
     dim = len(pop.keys())
     # Find non-zero indices first, create shortlist
     popProd = np.ones([dim, dim])
@@ -29,8 +30,7 @@ def gravityOnEverything(pop, keys, distMatrix, distList, roadDataList, retExampl
     exampleRow = []
     for i, alpha in enumerate(common.alphaIterate()):
         for j, beta in enumerate(common.betaIterate()):
-            gravityBeta = [x**alpha/(distList[k]**beta) for k, x
-                           in enumerate(popProdList)]
+            gravityBeta = [x**alpha/(distList[k]**beta) for k, x in enumerate(popProdList)]
             if retExample and alpha == common.alphaExample and beta == common.betaExample:
                 exampleRow = gravityBeta
             slope, intercept, r2= common.singleRegression(gravityBeta, roadDataList)

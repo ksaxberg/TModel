@@ -5,7 +5,7 @@ import parseData
 import common
 import numpy as np
 
-def gravityBoth(popFile, distFile, roadFile, titleString = " "):
+def gravityBoth(popFile, distFile, roadFile, titleString = " ", filename="img"):
     pop = parseData.parsePopulation(popFile)
     keys = parseData.makeKeys(popFile)
     dist = parseData.parseEdges(distFile, keys, sumValues=False)
@@ -16,14 +16,17 @@ def gravityBoth(popFile, distFile, roadFile, titleString = " "):
         print("Length of pop:{}\n\tof dist:{}\n\tof distList:{}\n\tof roadData:{}\n\tof roadDataList:{}".format(len(pop), len(dist), len(distList), len(roadData), len(roadDataList)))
 
 
-    slopeSumValues, interceptSumValues, r2SumValues , gravitySumEstimate= gravitySum(pop, keys, np.array(dist), np.array(roadData), retExample = True)
+    slopeSumValues, interceptSumValues, r2SumValues , gravitySumEstimate= gravitySum(pop, keys, np.array(dist), np.array(roadData), retExample=True)
     slopeValues, interceptValues, r2Values, gravityEstimate = gravity(pop, keys, dist, distList, np.array(roadDataList), retExample=True)
     # From Gravity
     common.plotBoth(roadDataList, 
         r2Values, 
+        slopeValues,
         interceptValues, 
         r2SumValues,
+        slopeSumValues,
         interceptSumValues, 
+        name=filename,
         titleString = titleString, 
         rowExampleGravity=gravityEstimate,
         rowExampleSumGravity=gravitySumEstimate)
