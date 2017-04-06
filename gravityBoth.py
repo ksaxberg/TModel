@@ -47,4 +47,3 @@ def gravityBoth(popFile, distFile, roadFile):
 if __name__=="__main__":
     # From GravitySum
     gravityBoth(sys.argv[1], sys.argv[2], sys.argv[3])
-
