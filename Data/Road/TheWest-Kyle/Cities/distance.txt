@@ -1,0 +1,21 @@
+Seattle, Portland, 140
+Portland, Denver, 1242
+Las Vegas, Denver, 748
+Las Vegas, Phoenix, 297
+Phoenix, Tucson, 116
+Phoenix, Denver, 821
+Phoenix, Albuquerque, 421
+Tucson, Albuquerque, 449
+Tucson, El Paso, 316
+Albuquerque, El Paso, 268
+Albuquerque, Denver, 449
+Albuquerque, Oklahoma City, 541
+Oklahoma City, Denver, 680
+Oklahoma City, Dallas, 200
+El Paso, Dallas, 604
+El Paso, San Antonio, 551
+San Antonio, Austin, 80
+Austin, Dallas, 189
+Houston, Dallas, 262
+Houston, San Antonio, 199
+Houston, Austin, 165

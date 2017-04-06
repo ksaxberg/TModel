@@ -1,0 +1,11 @@
+Pinetop, 15000
+Snowflake, 5600
+Heber-Overgaard, 2800
+Springerville, 6900
+Taylor, 4110
+Holbrook, 21000
+McNary, 500
+St.Johns, 3503
+NodeOutsideSpringerville, 5000
+SouthShowlow, 10000
+WestHeber, 20000

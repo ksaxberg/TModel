@@ -1,0 +1,21 @@
+The NorthEast AZ Data set:
+
+This dataset is an attempt to look at model output on small cities that are 
+reasonably isolated. The region chosen was a segment of cities in Arizona, 
+with a bounding triangle including Holbrook on I40, Heber-Overgaard, and 
+Springerville. Route distances were calculated with Google Maps, and the 
+population sizes were collected from the Wikipedia article for each city. 
+
+Road data values were collected off of the Arizona DOT site: 
+http://www.azdot.gov/planning/DataandAnalysis
+
+The values used were 2015 AADT's, using the bidirectional sum. On the path shown
+by Google Maps, a rough average was taken of a near-midpoint between two cities
+with consideration given to lower values along the path representing closer to
+true "through" values on the road segment. 
+
+This dataset has the filtering that the other NorthEastAZ dataset lacks.
+Cities with no significant seperation (10 miles of non-populated area) are aggregated together. Some population is added to Holbrook, to represent the attractiveness of I40 (this value is simply the size of the traffic on I40 on the segment near Holbrook). Other changes are documented within each subfolder.
+
+Additional changes: attempts to include "outside nodes" to give a closed graph.
+Three nodes were added, however this only improved model output slightly.

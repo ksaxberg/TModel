@@ -1,0 +1,125 @@
+ORD, Chicago, 9461105
+ATL, Atlanta, 5286728
+DEN, Denver, 2543482
+DTW, Detroit, 4296250
+MSP, Minneapolis, 3348859
+IAH, Houston, 5920416
+DFW, Dallas, 6426214
+CLT, Charlotte, 2217012
+LAX, Los Angelos, 12828837
+LGA, New York, 19567410
+PHL, Philadelphia, 5965343
+EWR, New York, 19567410
+DCA, Washington DC, 5636232
+LAS, Las Vegas, 1951269
+BOS, Boston, 4552402
+PHX, Phoenix, 4192887
+SEA, Seattle, 3439809
+IAD, Washington DC Dullus, 5636232
+SLC, Salt Lake City, 1087873
+MCO, Orlando, 2134411
+SFO, San Francisco, 4335391
+FLL, Miami and Ft Lauderdale, 5564635
+RDU, Raleigh, 1130490
+BWI, Baltimore, 2710489
+PIT, Pittsburgh, 2356285
+TPA, Tampa, 2783243
+JFK, New York, 19567410
+AUS, Austin, 1716289
+MSY, New Orleans, 1189866
+STL, St. Louis, 2787701
+MCI, Kansas City, 2009342
+PDX, Portland, 2226009
+IND, Indianapolis, 1887877
+ANC, Anchorage, 380821
+CLE, Cleveland, 2077240
+BNA, Nashville, 1670890
+SAN, San Diego, 3095313
+MIA, Miami, 5564635
+BET, Bethel, 6080
+SAT, San Antonio, 2142508
+CVG, Cincinnati, 2114580
+CMH, Columbus, 1901974
+FAI, Fairbanks, 97581
+BDL, Hartford, 1212381
+BUF, Buffalo, 1135509
+OAK, San Fransisco and Oakland, 4335391
+SJC, San Jose, 1836911
+RSW, Cape Coral, 618754
+MDW, Chicago, 9461105 
+JAX, Jacksonville, 1345596
+SMF, Sacramento, 2149127
+OMA, Omaha, 865350
+MKE, Milwaukee, 1555908
+DAL, Dallas, 6426214 
+MEM, Memphis, 1324829
+OKC, Oklahoma City, 1252987
+HOU, Houston, 5920416
+SNA, Los Angelos, 12828837
+ORF, Norfolk, 1676822
+ABQ, Albuquerque, 887077
+SDF, Louisville, 1235708
+RIC, Richmond, 1208101
+BUR, Los Angelos, 12828837
+IFP, Bullhead and Laughlin, 100000
+SJU, San Juan Puerto Rico, 2350126
+ALB, Albany, 870716
+PVD, Providence, 1600852
+PBI, Miami, 5564635
+GRR, Grand Rapids, 988938
+HNL, Honolulu, 953207
+RNO, Reno, 425417
+ROC, Rochester, 1079671
+TUL, Tulsa, 937478
+CHS, Charleston, 664607
+DSM, Des Moines, 569633
+SYR, Syracuse, 662577
+SFB, Orlando, 2134411
+ELP, El Paso, 804123
+BOI, Boise, 616561
+ONT, Los Angelos, 12828837
+OME, Nome, 10000
+TUS, Tucson, 980263
+GSO, Greensboro, 723801
+BHM, Birmingham, 1128047
+MHT, Manchester, 400721
+HPN, New York, 19567410
+GEG, Spokane, 527753
+DAY, Dayton, 799232
+OTZ, Kotzebue, 3201
+OGG, Kahului, 154924
+GSP, Greenville, 824112
+ICT, Wichita, 630919
+ACY, Atlantic City, 274549
+AZA, Phoenix, 4192887
+PIE, Tampa, 2783243
+PWM, Portland, 2226009
+MSN, Madison, 605435
+LIT, Little Rock, 699757
+ADQ, Kodiak, 6130
+JNU, Juneau, 31275
+CAK, Cleveland, 2077240
+MYR, Myrtle, 376722
+GPT, Gulfport, 370702
+TYS, Knoxville, 837571
+SAV, Savannah, 347611
+ANI, Aniak, 501
+CID, Cedar Rapids, 257940
+MDT, Harrisburg, 549475
+LEX, Lexington, 472099
+BTV, Burlington, 211261
+UNK, Unalakleet, 688
+MAF, Midland, 141671
+WFB, Ketchikan, 13787
+KOA, Kalaoa, 9644
+PNS, Pensacola, 448991
+XNA, Fayetteville, 463204
+BZN, Bozeman, 97308
+LBB, Lubbock, 311154
+ENV, Wendover, 1401
+KSM, St. Mary's, 600
+BIL, Billings, 158934
+COS, Colorado Springs, 645613
+MLI, Moline, 379690
+STT, Saint Thomas, 51634
+ISP, New York, 19567410

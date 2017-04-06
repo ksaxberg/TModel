@@ -1,0 +1,65 @@
+Node: This folder is a forked version of T100
+Goals:
+     Programmaticaly modify the distances listed for routes so that direct routes are preferred
+
+Results:
+    Image included in folder, nearly no correlation was found, with regions descending to numerical error due to variation in populations, orders 10^3 to 10^7
+
+
+
+
+
+
+
+Downloaded from http://www.transtats.bts.gov/Fields.asp?Table_ID=258
+
+Air Carriers: T-100 Domestic Market (US Carriers)
+
+
+Filtering out service class that isn't F or L, as those are the 
+passenger service designations.
+
+
+Did not have ability to resolve served area. Settled for hand picking the 
+populations surrounding the airports. Using the metropolitan areas for those 
+available, and attempted to go down the list based on frequency and size population
+travelling through.
+
+https://en.wikipedia.org/wiki/List_of_Metropolitan_Statistical_Areas
+
+
+Top 125 airports based on number of flights in 2015
+####
+Issues with LGA, JFK, EWA, HPN, ISP and population allocation
+
+Issues with IAD, DCA and population allocation
+
+Issues with MIA, FLL, PBI and population allocation 
+
+Issues with OAK, SFO 
+
+Issues with ORD, MDW
+
+Issues with DAL, DFW
+
+Issues with HOU, IAH 
+
+Issues with LAX, SNA, BUR, ONT
+
+Issues with MCO, SFB
+
+Issues with PHX, AZA 
+
+Issues with PIE, TPA
+
+Issues with PWM, PDX
+
+Issues with CAK, CLE
+--- 32 airports up to here
+
+Issues with ANI, BET  (ANI included in BET census)
+
+Issues with UNK, OME  (Unalakleet included in Nome census area)
+
+
+IFP used micropolitan statistical area, lots of casino charters

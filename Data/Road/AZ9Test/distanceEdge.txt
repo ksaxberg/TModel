@@ -1,0 +1,11 @@
+Flagstaff, CampVerde, 53
+Flagstaff, Kingman, 142
+CampVerde, Phoenix, 87
+Phoenix, CasaGrande, 56
+Phoenix, Kingman, 194
+CasaGrande, Tucson, 61
+CasaGrande, Yuma, 178
+Tucson, Nogales, 64
+Tucson, SierraVista, 74
+Nogales, SierraVista, 63
+Yuma, Kingman, 215

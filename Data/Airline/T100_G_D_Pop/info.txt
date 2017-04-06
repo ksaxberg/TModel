@@ -1,0 +1,4 @@
+Dataset of grouped cities, specified as the close proximity airports,
+where the distances are fixed so that direct flights are all used,
+and population is represented by the population of the city nearest
+the airport.

@@ -1,0 +1,4 @@
+This is a dataset for the state of Washington, including cities whose
+population exceeded 50,000. Population was retrieved from Wikipedia,
+and road data values were retried from the Washington State Department
+of Transportation AADT values for 2015.

@@ -1,0 +1,15 @@
+Pinetop, Showlow, 22877
+Pinetop, McNary, 2445
+Snowflake, Heber-Overgaard, 1000
+Snowflake, Taylor, 12000
+Snowflake, Holbrook, 8450
+Heber-Overgaard, Showlow, 3771
+Heber-Overgaard, Holbrook, 2200
+Showlow, Springerville, 3864
+Showlow, Taylor, 8917
+Springerville, St.Johns, 5650
+Springerville, McNary, 1224
+Holbrook, St.Johns, 1014
+Springerville, NodeOutsideSpringerville, 1100
+Showlow, SouthShowlow, 2000
+WestHeber, Heber-Overgaard, 6000

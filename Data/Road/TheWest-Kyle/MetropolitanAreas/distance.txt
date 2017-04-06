@@ -1,0 +1,28 @@
+Seattle, Portland, 174
+Seattle, Spokane, 279
+Seattle, Boise, 495
+Boise, Salt Lake City, 345
+Boise, Reno, 421
+Reno, Salt Lake City, 518
+Reno, Las Vegas, 448
+Las Vegas, Phoenix, 298
+Phoenix, Tucson, 116
+Phoenix, Salt Lake City, 663
+Phoenix, Albuquerque, 421
+Tucson, El Paso, 316
+El Paso, Austin, 579
+Austin, Corpus Christi, 217
+Corpus Christi, McAllen, 153
+Corpus Christi, Houston, 208
+Houston, Austin, 165
+Houston, Dallas-Fort Worth, 241
+Austin, Dallas-Fort Worth, 202
+Dallas-Fort Worth, Oklahoma City, 206
+Oklahoma City, Tulsa, 106
+Oklahoma City, Albuquerque, 541
+Oklahoma City, Wichita, 161
+Wichita, Kansas City, 199
+Tulsa, Kansas City, 269
+Kansas City, Denver, 605
+Omaha, Denver, 537
+Omaha, Kansas City, 188

@@ -1,0 +1,41 @@
+-------------------------------------------------------------------
+##### Concerns about changes
+
+In fabricating cities, assumptions may be made about how distance
+affects travel predictions. Simply using a uniform distance for the
+outside nodes may help, but if it is calibrated on how the additional
+traffic data should be accounted for in the distance and population, 
+we can start to see confirmational effects as new data "conforms" to 
+how we expect the data to do in the model, thus showing improvement 
+in the model as we have tailored data for the model. 
+
+
+
+--------------------------------------------------------------------
+##### Details of changes
+
+Combined Eager and Springervile, though distinct cities they
+are not geographically seperable.
+
+For the Traffic Values leading to Holbrook, this may indicate 
+visitors to the city, but may also indicate travel to the 
+nearest large interstate highway. Roughly ~16000 traffic count
+on either side of the city, adding this number to the population
+of Holbrook as a representation of attractiveness of the interstate. 
+
+
+Node: NodeOutsideSpringerville
+    Added the traffic from US60: ~700 to the traffic from northbound US191 ~400
+    Giving a population estimate of 5000 people. 
+    Giving a distance of 50 miles.
+
+Node: SouthShowlow
+    Added the traffic from US60 ~ 2000 
+    Giving a population estimate of 10000 people.
+    Giving a distance of 50 miles.
+
+Node: WestHeber
+    Added the traffic from west part of Local 260: ~6000
+    Giving a population estimate of 20000.
+    Giving a distance of 50 miles.
+

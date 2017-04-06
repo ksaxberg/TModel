@@ -1,0 +1,11 @@
+Flagstaff, CampVerde, 19000
+Flagstaff, Kingman, 12000
+CampVerde, Phoenix, 21000
+Phoenix, CasaGrande, 39000
+Phoenix, Kingman, 8000
+CasaGrande, Tucson, 38000
+CasaGrande, Yuma, 5700
+Tucson, Nogales, 17500
+Tucson, SierraVista, 13500
+Nogales, SierraVista, 2200
+Yuma, Kingman, 5000

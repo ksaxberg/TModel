@@ -1,0 +1,9 @@
+Bellingham, Everett, 61
+Everett, Seattle, 29.3
+Seattle, Tacoma, 33.6
+Tacoma, Vancouver, 135
+Seattle, Yakima, 142
+Vancouver, Yakima, 189
+Yakima, Pasco, 84.8
+Pasco, Spokane, 135
+Yakima, Spokane, 202

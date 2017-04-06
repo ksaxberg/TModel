@@ -1,0 +1,6 @@
+Portland, 870784
+Salem, 154637
+Eugene, 215588
+Bend, 76639
+Medford, 74907
+Albany, 104620

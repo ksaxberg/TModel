@@ -1,0 +1,14 @@
+Bellingham, 80885
+Everett, 163039
+Pasco, 133698
+Seattle, 1021512
+Spokane, 298671
+Tacoma, 422213
+Vancouver, 161791
+Yakima, 91067
+Portland, 870784
+Salem, 154637
+Eugene, 215588
+Bend, 76639
+Medford, 74907
+Albany, 104620
