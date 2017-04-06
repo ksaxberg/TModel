@@ -86,7 +86,7 @@ def singleRegression(x, y):
     return (slope*gravityFactorForNumErr), intercept, r2
 
 
-def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleString="", rowExampleGravity=[], rowslope=0, rowint=0):
+def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleString="", rowExampleGravity=[], rowExampleSumGravity=[]):
     """ Makes four countour plots, box plot and saves to the specified filename
 
     File will be saved into current directory as a png, input matrix z must
@@ -117,6 +117,7 @@ def plotBoth(roadDataList, z, intercept, zSum, interceptSum, name="img", titleSt
     
     # Alpha beta plot
     scatter = fig.add_subplot(gs[0:2, 2:])
+    m = intercept[int((alphaExample - alphaMin)/stepValueAlpha)][]
     m = rowslope
     b = rowint
     predictions = [x*m + b for x in rowExampleGravity]

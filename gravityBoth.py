@@ -5,7 +5,7 @@ import parseData
 import common
 import numpy as np
 
-def gravityBoth(popFile, distFile, roadFile):
+def gravityBoth(popFile, distFile, roadFile, titleString = " "):
     pop = parseData.parsePopulation(popFile)
     keys = parseData.makeKeys(popFile)
     dist = parseData.parseEdges(distFile, keys, sumValues=False)
@@ -15,34 +15,18 @@ def gravityBoth(popFile, distFile, roadFile):
     if common.DEBUG:
         print("Length of pop:{}\n\tof dist:{}\n\tof distList:{}\n\tof roadData:{}\n\tof roadDataList:{}".format(len(pop), len(dist), len(distList), len(roadData), len(roadDataList)))
 
-    #### Simply to get a1b1Row for plotting alpha 1, beta 1
-    dim = len(pop.keys())
-    # Find non-zero indices first, create shortlist
-    popProd = np.ones([dim, dim])
-    popProd *= -1
-    for i in range(dim):
-        for j in range(i, dim):
-            if dist[i][j] != 0:
-                popProd[i][j] = pop[i][0]*pop[j][0]
-    # is the same as the above in terms of element ordering
-    popProdList = [i for i in popProd.flat if i != -1] 
-    
-    gravityEstimate = [(x**common.alphaExample)/(distList[i]**common.betaExample) for i, x in enumerate(popProdList)]
-    m, b, r2 = common.singleRegression(gravityEstimate, roadDataList)
-    ####    End
 
-    slopeSumValues, interceptSumValues, r2SumValues = gravitySum(pop, keys, np.array(dist), np.array(roadData))
-    slopeValues, interceptValues, r2Values = gravity(pop, keys, dist, distList, np.array(roadDataList))
+    slopeSumValues, interceptSumValues, r2SumValues , gravitySumEstimate= gravitySum(pop, keys, np.array(dist), np.array(roadData), retExample = True)
+    slopeValues, interceptValues, r2Values, gravityEstimate = gravity(pop, keys, dist, distList, np.array(roadDataList), retExample=True)
     # From Gravity
     common.plotBoth(roadDataList, 
         r2Values, 
         interceptValues, 
         r2SumValues,
         interceptSumValues, 
-        titleString = " ", 
+        titleString = titleString, 
         rowExampleGravity=gravityEstimate,
-        rowslope=m, 
-        rowint=b)
+        rowExampleSumGravity=gravitySumEstimate)
 
 if __name__=="__main__":
     # From GravitySum

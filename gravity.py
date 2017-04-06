@@ -5,7 +5,7 @@ import parseData
 import common
 
 
-def gravityOnEverything(pop, keys, distMatrix, distList, roadDataList):
+def gravityOnEverything(pop, keys, distMatrix, distList, roadDataList, retExample=False):
     """ Creates a list of population products
     
     Takes the population and distance matrices, creates the matrix
@@ -26,14 +26,19 @@ def gravityOnEverything(pop, keys, distMatrix, distList, roadDataList):
     slopeValues = np.zeros([common.alphaSize(), common.betaSize()]) 
     interceptValues = np.zeros([common.alphaSize(), common.betaSize()]) 
     r2values = np.zeros([common.alphaSize(), common.betaSize()]) 
-
+    exampleRow = []
     for i, alpha in enumerate(common.alphaIterate()):
         for j, beta in enumerate(common.betaIterate()):
             gravityBeta = [x**alpha/(distList[k]**beta) for k, x
                            in enumerate(popProdList)]
+            if retExample and alpha == common.alphaExample and beta == common.betaExample:
+                exampleRow = gravityBeta
             slope, intercept, r2= common.singleRegression(gravityBeta, roadDataList)
             slopeValues[i][j] = slope
             interceptValues[i][j] = intercept
             r2values[i][j] = r2
 
-    return [slopeValues, interceptValues, r2values]
+    if retExample:
+        return [slopeValues, interceptValues, r2values, exampleRow]
+    else:
+        return [slopeValues, interceptValues, r2values]

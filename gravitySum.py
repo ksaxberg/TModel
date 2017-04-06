@@ -140,7 +140,7 @@ def overLappingRoutes(distances):
 
 
 
-def gravitySumOnEverything(pop, keys, distMatrix, roadData):
+def gravitySumOnEverything(pop, keys, distMatrix, roadData, retExample=False):
     # Helper function for gravity calculation
     def convertRoutesToList(overlaps, pops, beta, alpha):
         # Constant factor K will have to be multiplied on the size
@@ -174,30 +174,21 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadData):
                 if len(cell) == 0:
                     roadData[i][j] = 0
     roadDataList = [x for x in roadData.flat if x != 0]
-    #r2values = [] 
-    #interceptValues = []
-
-    #for alpha in common.alphaIterate():
-    #    this_r2 = []
-    #    this_intercept = []
-    #    for beta in common.betaIterate():
-    #        partialList = convertRoutesToList(overlap, pop, beta, alpha)
-    #        slope, intercept, r2= common.singleRegression(partialList, roadDataList)
-    #        # Calculate prediction on current pathed values
-    #        this_intercept.append(math.log(abs(intercept), 10))
-    #        this_r2.append(r2)
-    #    r2values.append(this_r2)
-    #    interceptValues.append(this_intercept)
-    #return [r2values, interceptValues]
     slopeValues = np.zeros([common.alphaSize(), common.betaSize()]) 
     interceptValues = np.zeros([common.alphaSize(), common.betaSize()]) 
     r2values = np.zeros([common.alphaSize(), common.betaSize()]) 
+    exampleRow = []
     for i, alpha in enumerate(common.alphaIterate()):
         for j, beta in enumerate(common.betaIterate()):
             partialList = convertRoutesToList(overlap, pop, beta, alpha)
+            if retExample and alpha == common.alphaExample and beta == common.betaExample:
+                exampleRow = partialList
             slope, intercept, r2= common.singleRegression(partialList, roadDataList)
             # Calculate prediction on current pathed values
             slopeValues[i][j] = slope
             interceptValues[i][j] = intercept
             r2values[i][j] = r2
-    return [slopeValues, interceptValues, r2values]
+    if retExample:
+        return [slopeValues, interceptValues, r2values, exampleRow]
+    else: 
+        return [slopeValues, interceptValues, r2values]
