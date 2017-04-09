@@ -116,8 +116,8 @@ def plotBoth(roadDataList, z, slope, intercept, zSum, slopeSum, interceptSum, na
     
     ####  GRAVITY Plot
     scatter = fig.add_subplot(gs[0:2, 0:2])
-    m = slope[int((alphaExample - alphaMin)/stepValueAlpha)][int((betaExample - betaMin)/stepValueBeta)]
-    b = intercept[int((alphaExample - alphaMin)/stepValueAlpha)][int((betaExample - betaMin)/stepValueBeta)]
+    m = slope[int(round((alphaExample - alphaMin)/stepValueAlpha))][int(round((betaExample - betaMin)/stepValueBeta))]
+    b = intercept[int(round((alphaExample - alphaMin)/stepValueAlpha))][int(round((betaExample - betaMin)/stepValueBeta))]
     predictions = [x*m + b for x in rowExampleGravity]
     predictions_noInt = [x*m for x in rowExampleGravity]
     scatter.scatter(rowExampleGravity, predictions, c='b', marker='x', label="predictions")
@@ -131,8 +131,8 @@ def plotBoth(roadDataList, z, slope, intercept, zSum, slopeSum, interceptSum, na
     ####    End
     ####  GRAVITY SUMS Plot
     scatter = fig.add_subplot(gs[0:2, 2:])
-    m = slopeSum[int((alphaSumExample - alphaMin)/stepValueAlpha)][int((betaSumExample - betaMin)/stepValueBeta)]
-    b = interceptSum[int((alphaSumExample - alphaMin)/stepValueAlpha)][int((betaSumExample - betaMin)/stepValueBeta)]
+    m = slopeSum[int(round((alphaSumExample - alphaMin)/stepValueAlpha))][int(round((betaSumExample - betaMin)/stepValueBeta))]
+    b = interceptSum[int(round((alphaSumExample - alphaMin)/stepValueAlpha))][int(round((betaSumExample - betaMin)/stepValueBeta))]
     predictions = [x*m + b for x in rowExampleSumGravity]
     predictions_noInt = [x*m for x in rowExampleSumGravity]
     scatter.scatter(rowExampleSumGravity, predictions, c='b', marker='x', label="predictions")
