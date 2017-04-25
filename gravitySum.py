@@ -5,7 +5,7 @@ import numpy as np
 from gravity import *
 import common
 import parseData
-DEBUG = common.DEBUG 
+DEBUG = common.DEBUG
 
 
 def runDijkstra(distances, source, destination, memory):
@@ -86,7 +86,7 @@ def overLappingRoutes(distances):
     """
     # Make a copy of the matrix symmetric
     dist = np.array(distances)
-    dist = dist + dist.T - np.diag(dist.diagonal()) 
+    dist = dist + dist.T - np.diag(dist.diagonal())
 
     # Have spoiler route index -1
     size = len(dist[0])
@@ -114,7 +114,7 @@ def overLappingRoutes(distances):
                     # Then have a pass-through edge
                     if common.gravitySumDistThresh < length  or length < common.gravitySumDistThreshMinimum:
                         continue
-            
+
         for i in range(len(path)-1):
             # Store the fact that the parent route goes over edge,
             #  and total distance of the path.
@@ -131,11 +131,11 @@ def overLappingRoutes(distances):
         print("Route samples:")
         for i in range(min(5, len(firstFive))):
             print("\t{0}, {1}, {2}".format(firstFive[i][0], firstFive[i][1], firstFive[i][2]))
-        
+
         with open("RoutesThatNeedChanging.txt", "w") as f:
             for i in range(len(firstFive)):
                 f.write("{0}, {1}, {2}\n".format(firstFive[i][0], firstFive[i][1], firstFive[i][2]))
-            
+
     return routeOverlap
 
 
@@ -174,21 +174,29 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadData, retExample=False):
                 if len(cell) == 0:
                     roadData[i][j] = 0
     roadDataList = [x for x in roadData.flat if x != 0]
-    slopeValues = np.zeros([common.alphaSize(), common.betaSize()]) 
-    interceptValues = np.zeros([common.alphaSize(), common.betaSize()]) 
-    r2values = np.zeros([common.alphaSize(), common.betaSize()]) 
+    slopeValues = np.zeros([common.alphaSize(), common.betaSize()])
+    interceptValues = np.zeros([common.alphaSize(), common.betaSize()])
+    r2values = np.zeros([common.alphaSize(), common.betaSize()])
+    matchR2 = 0
     exampleRow = []
     for i, alpha in enumerate(common.alphaIterate()):
         for j, beta in enumerate(common.betaIterate()):
             partialList = convertRoutesToList(overlap, pop, beta, alpha)
-            if retExample and np.isclose(alpha, common.alphaSumExample) and np.isclose(beta, common.betaSumExample):
-                exampleRow = partialList
+
             slope, intercept, r2= common.singleRegression(partialList, roadDataList)
+            if retExample:
+                if not common.automaticBestMatch:
+                    if np.isclose(alpha, common.alphaSumExample) and np.isclose(beta, common.betaSumExample):
+                        exampleRow = partialList
+                else:
+                    if r2 > matchR2:
+                        matchR2 = r2
+                        exampleRow = partialList
             # Calculate prediction on current pathed values
             slopeValues[i][j] = slope
             interceptValues[i][j] = intercept
             r2values[i][j] = r2
     if retExample:
         return [slopeValues, interceptValues, r2values, exampleRow]
-    else: 
+    else:
         return [slopeValues, interceptValues, r2values]

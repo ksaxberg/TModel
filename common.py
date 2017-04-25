@@ -1,31 +1,31 @@
+import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib import colors
 from matplotlib import colorbar
 from matplotlib import gridspec
 from matplotlib import rcParams
 from decimal import Decimal
-import matplotlib.pyplot as plt
 import numpy as np
 import math
 
 #### Parameters for manipulation
 DEBUG = False
 alphaMin = 0.1
-alphaMax = 2 
-alphaExample = 0.2 
-alphaSumExample = 0.2
-betaMin = 0.1 
+alphaMax = 2
+alphaExample = 0.2
+alphaSumExample = 0.6
+betaMin = 0.1
 betaMax = 3
-betaExample = 1.2 
-betaSumExample = 1.6
+betaExample = 1.2
+betaSumExample = 1.5
 stepValueAlpha = 0.1
 stepValueBeta = 0.1
 useGravitySumThresh = True
 deleteFromOriginalNetworkSum = False
-gravitySumDistThresh = 400 
-gravitySumDistThreshMinimum = 0 
+gravitySumDistThresh = 300
+gravitySumDistThreshMinimum = 0
+automaticBestMatch = True
 #### End
-
 
 def alphaIterate():
     return np.arange(alphaMin, alphaMax, stepValueAlpha)
@@ -87,6 +87,21 @@ def singleRegression(x, y):
     r2 = rSquared(predicted, y)
     return (slope*factor), intercept, r2
 
+def matrixMaximum(matrix):
+    """
+    Special value R^2, should be between 0 and 1
+    """
+    maxSoFar = 0
+    rowSoFar = 0
+    colSoFar = 0
+    for i, rows in enumerate(matrix):
+        for j, col in enumerate(rows):
+            if col > maxSoFar:
+                maxSoFar= col
+                rowSoFar = i
+                colSoFar = j
+    return rowSoFar, colSoFar, maxSoFar
+
 
 def plotBoth(roadDataList, z, slope, intercept, zSum, slopeSum, interceptSum, name="img", titleString="", rowExampleGravity=[], rowExampleSumGravity=[]):
     """ Makes four countour plots, box plot and saves to the specified filename
@@ -102,48 +117,86 @@ def plotBoth(roadDataList, z, slope, intercept, zSum, slopeSum, interceptSum, na
     fig = plt.figure(figsize=(10, 10), dpi=200)
     #fig.set_size_inches(5, 5)
     gs = gridspec.GridSpec(4, 4)
-    
+
     #### First Row Option 1: Single large boxplot
     #box1 = fig.add_subplot(gs[0,:])
     #box1.boxplot(roadDataList, 0, 'rs', 0)
     #box1.set_xlabel('Traffic Data Range')
-    ####    End 
+    ####    End
 
     #### First Row Option 2: Gravity plot and GravitySums plot
     if not rowExampleGravity:
         raise ValueError("""Plot wants to show Alpha=1, Beta=1 gravity regression
             but regression values not passed in as rowA1B1ofGravity""")
-    
-    ####  GRAVITY Plot
-    scatter = fig.add_subplot(gs[0:2, 0:2])
-    m = slope[int(round((alphaExample - alphaMin)/stepValueAlpha))][int(round((betaExample - betaMin)/stepValueBeta))]
-    b = intercept[int(round((alphaExample - alphaMin)/stepValueAlpha))][int(round((betaExample - betaMin)/stepValueBeta))]
-    predictions = [x*m + b for x in rowExampleGravity]
-    predictions_noInt = [x*m for x in rowExampleGravity]
-    scatter.scatter(rowExampleGravity, predictions, c='b', marker='x', label="predictions")
-    scatter.scatter(rowExampleGravity, predictions_noInt, c='g', marker='+', alpha=0.5, label="predictions without intercept")
-    scatter.scatter(rowExampleGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual") 
-    scatter.set_xlabel('Gravity Val input')
-    scatter.set_title("Gravity where alpha={}, beta={} \nm={} b={}".format(alphaExample, betaExample,
-                      formatScientific(m), formatScientific(b)))
-    scatter.set_ylabel('Number of People')
-    scatter.legend(loc="upper left", frameon=False)
-    ####    End
-    ####  GRAVITY SUMS Plot
-    scatter = fig.add_subplot(gs[0:2, 2:])
-    m = slopeSum[int(round((alphaSumExample - alphaMin)/stepValueAlpha))][int(round((betaSumExample - betaMin)/stepValueBeta))]
-    b = interceptSum[int(round((alphaSumExample - alphaMin)/stepValueAlpha))][int(round((betaSumExample - betaMin)/stepValueBeta))]
-    predictions = [x*m + b for x in rowExampleSumGravity]
-    predictions_noInt = [x*m for x in rowExampleSumGravity]
-    scatter.scatter(rowExampleSumGravity, predictions, c='b', marker='x', label="predictions")
-    scatter.scatter(rowExampleSumGravity, predictions_noInt, c='g', marker='+', alpha = 0.5, label="predictions without intercept")
-    scatter.scatter(rowExampleSumGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual") 
-    scatter.set_xlabel('Gravity Sum Val input')
-    scatter.set_title("Gravity Sum where alpha={}, beta={} \nm={} b={}".format(alphaSumExample, betaSumExample,
-                      formatScientific(m), formatScientific(b)))
-    scatter.set_ylabel('Number of People')
-    scatter.legend(loc="upper left", frameon=False)
-    ####    End
+    if(not automaticBestMatch):
+        ####  GRAVITY Plot
+        scatter = fig.add_subplot(gs[0:2, 0:2])
+        m = slope[int(round((alphaExample - alphaMin)/stepValueAlpha))][int(round((betaExample - betaMin)/stepValueBeta))]
+        b = intercept[int(round((alphaExample - alphaMin)/stepValueAlpha))][int(round((betaExample - betaMin)/stepValueBeta))]
+        predictions = [x*m + b for x in rowExampleGravity]
+        predictions_noInt = [x*m for x in rowExampleGravity]
+        scatter.scatter(rowExampleGravity, predictions, c='b', marker='x', label="predictions")
+        scatter.scatter(rowExampleGravity, predictions_noInt, c='g', marker='+', alpha=0.5, label="predictions without intercept")
+        scatter.scatter(rowExampleGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+        scatter.set_xlabel('Gravity Val input')
+        scatter.set_title("Gravity where alpha={}, beta={} \nm={} b={}".format(alphaExample, betaExample,
+                          formatScientific(m), formatScientific(b)))
+        scatter.set_ylabel('Number of People')
+        scatter.legend(loc="upper left", frameon=False)
+        ####    End
+        ####  GRAVITY SUMS Plot
+        scatter = fig.add_subplot(gs[0:2, 2:])
+        m = slopeSum[int(round((alphaSumExample - alphaMin)/stepValueAlpha))][int(round((betaSumExample - betaMin)/stepValueBeta))]
+        b = interceptSum[int(round((alphaSumExample - alphaMin)/stepValueAlpha))][int(round((betaSumExample - betaMin)/stepValueBeta))]
+        predictions = [x*m + b for x in rowExampleSumGravity]
+        predictions_noInt = [x*m for x in rowExampleSumGravity]
+        scatter.scatter(rowExampleSumGravity, predictions, c='b', marker='x', label="predictions")
+        scatter.scatter(rowExampleSumGravity, predictions_noInt, c='g', marker='+', alpha = 0.5, label="predictions without intercept")
+        scatter.scatter(rowExampleSumGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+        scatter.set_xlabel('Gravity Sum Val input')
+        scatter.set_title("Gravity Sum where alpha={}, beta={} \nm={} b={}".format(alphaSumExample, betaSumExample,
+                          formatScientific(m), formatScientific(b)))
+        scatter.set_ylabel('Number of People')
+        scatter.legend(loc="upper left", frameon=False)
+        ####    End
+    else:
+        ####  GRAVITY Plot
+        scatter = fig.add_subplot(gs[0:2, 0:2])
+        alphaBestInd, betaBestInd, bestR2 = matrixMaximum(z)
+        alphaInd = alphaBestInd*stepValueAlpha - alphaMin
+        betaInd = betaBestInd*stepValueBeta - betaMin
+        m = slope[alphaBestInd][betaBestInd]
+        b = intercept[alphaBestInd][betaBestInd]
+        predictions = [x*m + b for x in rowExampleGravity]
+        predictions_noInt = [x*m for x in rowExampleGravity]
+        scatter.scatter(rowExampleGravity, predictions, c='b', marker='x', label="predictions")
+        scatter.scatter(rowExampleGravity, predictions_noInt, c='g', marker='+', alpha=0.5, label="predictions without intercept")
+        scatter.scatter(rowExampleGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+        scatter.set_xlabel('Gravity Val input')
+        scatter.set_title("Best Gravity was r2={:.3f} at alpha={}, beta={} \nm={} b={}".format(bestR2, alphaInd, betaInd,
+                          formatScientific(m), formatScientific(b)))
+        scatter.set_ylabel('Number of People')
+        scatter.legend(loc="upper left", frameon=False)
+        ####    End
+        ####  GRAVITY SUMS Plot
+        scatter = fig.add_subplot(gs[0:2, 2:])
+        alphaSumsBestInd, betaSumsBestInd, bestSumR2 = matrixMaximum(zSum)
+        alphaInd = alphaSumsBestInd*stepValueAlpha - alphaMin
+        betaInd = betaSumsBestInd*stepValueBeta - betaMin
+        m = slopeSum[alphaSumsBestInd][betaSumsBestInd]
+        b = interceptSum[alphaSumsBestInd][betaSumsBestInd]
+        predictions = [x*m + b for x in rowExampleSumGravity]
+        predictions_noInt = [x*m for x in rowExampleSumGravity]
+        scatter.scatter(rowExampleSumGravity, predictions, c='b', marker='x', label="predictions")
+        scatter.scatter(rowExampleSumGravity, predictions_noInt, c='g', marker='+', alpha = 0.5, label="predictions without intercept")
+        scatter.scatter(rowExampleSumGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+        scatter.set_xlabel('Gravity Sum Val input')
+        scatter.set_title("Best Gravity Sum was r2={:.3f} at alpha={}, beta={} \nm={} b={}".format(bestSumR2, alphaInd, betaInd,
+                          formatScientific(m), formatScientific(b)))
+        scatter.set_ylabel('Number of People')
+        scatter.legend(loc="upper left", frameon=False)
+        ####    End
+
 
 
     # Gravity R Value

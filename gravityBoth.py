@@ -26,15 +26,15 @@ def gravityBoth(popFile, distFile, roadFile, titleString = " ", filename="img"):
         return
 
     # From Gravity
-    common.plotBoth(roadDataList, 
-        r2Values, 
+    common.plotBoth(roadDataList,
+        r2Values,
         slopeValues,
-        interceptValues, 
+        interceptValues,
         r2SumValues,
         slopeSumValues,
-        interceptSumValues, 
+        interceptSumValues,
         name=filename,
-        titleString = titleString, 
+        titleString = titleString,
         rowExampleGravity=gravityEstimate,
         rowExampleSumGravity=gravitySumEstimate)
 
