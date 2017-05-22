@@ -27,13 +27,15 @@ def gravityOnEverything(pop, keys, distMatrix, distList, roadDataList, retExampl
     slopeValues = np.zeros([common.alphaSize(), common.betaSize()])
     interceptValues = np.zeros([common.alphaSize(), common.betaSize()])
     r2values = np.zeros([common.alphaSize(), common.betaSize()])
+    otherValues = np.zeros([common.alphaSize(), common.betaSize()])
+    secondOtherValues = np.zeros([common.alphaSize(), common.betaSize()])
     matchR2 = 0;
     exampleRow = []
 
     for i, alpha in enumerate(common.alphaIterate()):
         for j, beta in enumerate(common.betaIterate()):
             gravityBeta = [x**alpha/(distList[k]**beta) for k, x in enumerate(popProdList)]
-            slope, intercept, r2= common.singleRegression(gravityBeta, roadDataList)
+            slope, intercept, r2, otherValue, secondOtherValue= common.singleRegressionPlus(gravityBeta, roadDataList)
             if retExample:
                 if not common.automaticBestMatch:
                     if np.isclose(alpha,common.alphaExample) and np.isclose(beta,common.betaExample):
@@ -46,8 +48,10 @@ def gravityOnEverything(pop, keys, distMatrix, distList, roadDataList, retExampl
             slopeValues[i][j] = slope
             interceptValues[i][j] = intercept
             r2values[i][j] = r2
+            otherValues[i][j]=otherValue
+            secondOtherValues[i][j]=secondOtherValue
 
     if retExample:
-        return [slopeValues, interceptValues, r2values, exampleRow]
+        return [slopeValues, interceptValues, r2values, otherValues, secondOtherValues,exampleRow]
     else:
-        return [slopeValues, interceptValues, r2values]
+        return [slopeValues, interceptValues, r2values, otherValues, secondOtherValues ]

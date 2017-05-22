@@ -177,13 +177,15 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadData, retExample=False):
     slopeValues = np.zeros([common.alphaSize(), common.betaSize()])
     interceptValues = np.zeros([common.alphaSize(), common.betaSize()])
     r2values = np.zeros([common.alphaSize(), common.betaSize()])
+    otherValues = np.zeros([common.alphaSize(), common.betaSize()])
+    secondOtherValues = np.zeros([common.alphaSize(), common.betaSize()])
     matchR2 = 0
     exampleRow = []
     for i, alpha in enumerate(common.alphaIterate()):
         for j, beta in enumerate(common.betaIterate()):
             partialList = convertRoutesToList(overlap, pop, beta, alpha)
 
-            slope, intercept, r2= common.singleRegression(partialList, roadDataList)
+            slope, intercept, r2, otherValue, secondOtherValue= common.singleRegressionPlus(partialList, roadDataList)
             if retExample:
                 if not common.automaticBestMatch:
                     if np.isclose(alpha, common.alphaSumExample) and np.isclose(beta, common.betaSumExample):
@@ -196,7 +198,9 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadData, retExample=False):
             slopeValues[i][j] = slope
             interceptValues[i][j] = intercept
             r2values[i][j] = r2
+            otherValues[i][j]=otherValue
+            secondOtherValues[i][j]=secondOtherValue
     if retExample:
-        return [slopeValues, interceptValues, r2values, exampleRow]
+        return [slopeValues, interceptValues, r2values,otherValues, secondOtherValues, exampleRow]
     else:
-        return [slopeValues, interceptValues, r2values]
+        return [slopeValues, interceptValues, otherValues, secondOtherValues, r2values]

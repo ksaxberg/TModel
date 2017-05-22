@@ -43,6 +43,15 @@ def formatScientific(x):
     return "{:.2E}".format(Decimal(x))
 
 
+def otherOne(pred, meas):
+    """ Another measure of fit for the data
+
+    """
+    return .9
+
+def otherTwo(pred, meas):
+    return .6
+
 def rSquared(pred, meas):
     """ Calculate r^2 value.
 
@@ -79,13 +88,28 @@ def singleRegression(x, y):
     #predicted = [slope*i + intercept for i in x]
     #r2 = rSquared(predicted, y)
     #return slope, intercept, r2
-    expForFactor = math.floor(min([math.log(i, 10) for i in x]))
+    expForFactor = math.floor(min([math.log(abs(i), 10) for i in x]))
     factor = 1/(10**expForFactor)
     adjust = [factor*i for i in x]
     slope, intercept = linRegress(adjust, y)
     predicted = [slope*i + intercept for i in adjust]
     r2 = rSquared(predicted, y)
     return (slope*factor), intercept, r2
+
+
+def singleRegressionPlus(x, y):
+    """
+    Runs through a single regression, returning slope, intercept, r2
+    """
+    expForFactor = math.floor(min([math.log(abs(i), 10) for i in x]))
+    factor = 1/(10**expForFactor)
+    adjust = [factor*i for i in x]
+    slope, intercept = linRegress(adjust, y)
+    predicted = [slope*i + intercept for i in adjust]
+    r2 = rSquared(predicted, y)
+    otherValue = otherOne(predicted, y)
+    secondOtherValue = otherTwo(predicted, y)
+    return (slope*factor), intercept, r2, otherValue, secondOtherValue
 
 def matrixMaximum(matrix):
     """
@@ -103,7 +127,7 @@ def matrixMaximum(matrix):
     return rowSoFar, colSoFar, maxSoFar
 
 
-def plotBoth(roadDataList, z, slope, intercept, zSum, slopeSum, interceptSum, name="img", titleString="", rowExampleGravity=[], rowExampleSumGravity=[]):
+def plotBoth(roadDataList, z, otherValues, secondOtherValues, slope, intercept, zSum, otherSumValues, secondOtherSumValues, slopeSum, interceptSum, name="img", titleString="", rowExampleGravity=[], rowExampleSumGravity=[], useRange=False, rangeData=([],[])):
     """ Makes four countour plots, box plot and saves to the specified filename
 
     File will be saved into current directory as a png, input matrix z must
@@ -115,7 +139,9 @@ def plotBoth(roadDataList, z, slope, intercept, zSum, slopeSum, interceptSum, na
     xval = betaIterate()
     yval = alphaIterate()
     fig = plt.figure(figsize=(10, 10), dpi=200)
+    #fig = plt.figure(figsize=(10, 15), dpi=300)
     #fig.set_size_inches(5, 5)
+    #gs = gridspec.GridSpec(8, 4)
     gs = gridspec.GridSpec(4, 4)
 
     #### First Row Option 1: Single large boxplot
@@ -123,6 +149,35 @@ def plotBoth(roadDataList, z, slope, intercept, zSum, slopeSum, interceptSum, na
     #box1.boxplot(roadDataList, 0, 'rs', 0)
     #box1.set_xlabel('Traffic Data Range')
     ####    End
+
+    # Some calculations if we are using range
+    rowExampleGravity_sorted = []
+    rowExampleSumGravity_sorted = []
+    minimData_sorted = []
+    maximData_sorted = []
+    minimData_sum_sorted = []
+    maximData_sum_sorted = []
+    if useRange:
+        minimData = rangeData[0]
+        maximData = rangeData[1]
+        coll_grav = []
+        for i in range(len(rowExampleGravity)):
+            coll_grav += [(rowExampleGravity[i], minimData[i], maximData[i])]
+        coll_grav_sort = sorted(coll_grav, key=lambda tup: tup[0])
+        for x in coll_grav_sort:
+            rowExampleGravity_sorted += [x[0]]
+            minimData_sorted += [x[1]]
+            maximData_sorted += [x[2]]
+        #Now gravity sum
+        coll_grav_sum = []
+        for i in range(len(rowExampleSumGravity)):
+            coll_grav_sum += [(rowExampleSumGravity[i], minimData[i], maximData[i])]
+        coll_grav_sum_sort = sorted(coll_grav_sum, key=lambda tup: tup[0])
+        for x in coll_grav_sum_sort:
+            rowExampleSumGravity_sorted += [x[0]]
+            minimData_sum_sorted += [x[1]]
+            maximData_sum_sorted += [x[2]]
+        
 
     #### First Row Option 2: Gravity plot and GravitySums plot
     if not rowExampleGravity:
@@ -137,7 +192,11 @@ def plotBoth(roadDataList, z, slope, intercept, zSum, slopeSum, interceptSum, na
         predictions_noInt = [x*m for x in rowExampleGravity]
         scatter.scatter(rowExampleGravity, predictions, c='b', marker='x', label="predictions")
         scatter.scatter(rowExampleGravity, predictions_noInt, c='g', marker='+', alpha=0.5, label="predictions without intercept")
-        scatter.scatter(rowExampleGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+        if not useRange:
+            scatter.scatter(rowExampleGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+        else:
+            scatter.scatter(rowExampleGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+            scatter.fill_between(rowExampleGravity_sorted, minimData_sorted, maximData_sorted, facecolor='red', alpha=0.1)
         scatter.set_xlabel('Gravity Val input')
         scatter.set_title("Gravity where alpha={}, beta={} \nm={} b={}".format(alphaExample, betaExample,
                           formatScientific(m), formatScientific(b)))
@@ -152,7 +211,11 @@ def plotBoth(roadDataList, z, slope, intercept, zSum, slopeSum, interceptSum, na
         predictions_noInt = [x*m for x in rowExampleSumGravity]
         scatter.scatter(rowExampleSumGravity, predictions, c='b', marker='x', label="predictions")
         scatter.scatter(rowExampleSumGravity, predictions_noInt, c='g', marker='+', alpha = 0.5, label="predictions without intercept")
-        scatter.scatter(rowExampleSumGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+        if not useRange:
+            scatter.scatter(rowExampleSumGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+        else:
+            scatter.scatter(rowExampleSumGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+            scatter.fill_between(rowExampleSumGravity_sorted, minimData_sum_sorted, maximData_sum_sorted, facecolor='red', alpha=0.1)
         scatter.set_xlabel('Gravity Sum Val input')
         scatter.set_title("Gravity Sum where alpha={}, beta={} \nm={} b={}".format(alphaSumExample, betaSumExample,
                           formatScientific(m), formatScientific(b)))
@@ -171,7 +234,11 @@ def plotBoth(roadDataList, z, slope, intercept, zSum, slopeSum, interceptSum, na
         predictions_noInt = [x*m for x in rowExampleGravity]
         scatter.scatter(rowExampleGravity, predictions, c='b', marker='x', label="predictions")
         scatter.scatter(rowExampleGravity, predictions_noInt, c='g', marker='+', alpha=0.5, label="predictions without intercept")
-        scatter.scatter(rowExampleGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+        if not useRange:
+            scatter.scatter(rowExampleGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+        else:
+            scatter.scatter(rowExampleGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+            scatter.fill_between(rowExampleGravity_sorted, minimData_sorted, maximData_sorted, facecolor='red', alpha=0.1)
         scatter.set_xlabel('Gravity Val input')
         scatter.set_title("Best Gravity was r2={:.3f} at alpha={}, beta={} \nm={} b={}".format(bestR2, alphaInd, betaInd,
                           formatScientific(m), formatScientific(b)))
@@ -189,7 +256,11 @@ def plotBoth(roadDataList, z, slope, intercept, zSum, slopeSum, interceptSum, na
         predictions_noInt = [x*m for x in rowExampleSumGravity]
         scatter.scatter(rowExampleSumGravity, predictions, c='b', marker='x', label="predictions")
         scatter.scatter(rowExampleSumGravity, predictions_noInt, c='g', marker='+', alpha = 0.5, label="predictions without intercept")
-        scatter.scatter(rowExampleSumGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+        if not useRange:
+            scatter.scatter(rowExampleSumGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+        else:
+            scatter.scatter(rowExampleSumGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+            scatter.fill_between(rowExampleSumGravity_sorted, minimData_sum_sorted, maximData_sum_sorted, facecolor='red', alpha=0.1)
         scatter.set_xlabel('Gravity Sum Val input')
         scatter.set_title("Best Gravity Sum was r2={:.3f} at alpha={}, beta={} \nm={} b={}".format(bestSumR2, alphaInd, betaInd,
                           formatScientific(m), formatScientific(b)))
@@ -198,8 +269,8 @@ def plotBoth(roadDataList, z, slope, intercept, zSum, slopeSum, interceptSum, na
         ####    End
 
 
-
-    # Gravity R Value
+    #### R Value
+    # Gravity
     sub1 = fig.add_subplot(gs[2:4, 0:2])
     norm = colors.Normalize(0, 1.01)
     cmap = cm.get_cmap('nipy_spectral', 100)
@@ -212,26 +283,8 @@ def plotBoth(roadDataList, z, slope, intercept, zSum, slopeSum, interceptSum, na
         sub1.set_title(titleString+' R^2 Values')
     plt.colorbar(CS, )
 
-    ######## Gravity intercept LOG
-    ### Gravity Intercept
-    ##CS = sub2.contourf(xval, yval, intercept, np.arange(0, 10, 0.1),
-    ##                 cmap=cmap, norm=norm,  vmin=0, vmax=10)
-    ## Gravity Intercept
-    #sub2 = fig.add_subplot(gs[2:4,2:])
-    #norm = colors.Normalize(0, 10)
-    #cmap = cm.get_cmap('nipy_spectral', 100)
-    ## arange of the following is partial setup for colorbar
-    ##CS = sub2.contourf(xval, yval, intercept, rang,
-    ##                 cmap=cmap, norm=norm)
-    #CS = sub2.contourf(xval, yval, intercept, 100, cmap=cmap)
-    #sub2.set_xlabel('Beta')
-    #sub2.set_ylabel('Alpha')
-    #if titleString:
-    #    sub2.set_title(titleString+' Intercept Values')
-    #plt.colorbar(CS, )
 
-
-    # Gravity Sum R Value
+    # Gravity Sum
     sub3 = fig.add_subplot(gs[2:4,2:])
     norm = colors.Normalize(0, 1.01)
     cmap = cm.get_cmap('nipy_spectral', 100)
@@ -245,21 +298,64 @@ def plotBoth(roadDataList, z, slope, intercept, zSum, slopeSum, interceptSum, na
     plt.colorbar(CS, )
 
 
-    ####### Gravity Sum Intercept
-    ######sub4 = fig.add_subplot(gs[4:6,2:])
-    ######norm = colors.Normalize(0, 10)
-    ######cmap = cm.get_cmap('nipy_spectral', 100)
-    ######CS = sub4.contourf(xval, yval, interceptSum, np.arange(0, 10, 0.1),
-    ######                 cmap=cmap, norm=norm,  vmin=0, vmax=10)
-    ## Gravity Sum Intercept
-    #sub4 = fig.add_subplot(gs[4:6,2:])
-    ## arange of the following is partial setup for colorbar
-    #CS = sub4.contourf(xval, yval, interceptSum, 100)
-    #sub4.set_xlabel('Beta')
-    #sub4.set_ylabel('Alpha')
-    #if titleString:
-    #    sub4.set_title(titleString+' Sum Intercept Values')
-    #plt.colorbar(CS, )
+
+    ####### Other one
+    #### Gravity
+    ###sub1 = fig.add_subplot(gs[4:6, 0:2])
+    ###norm = colors.Normalize(0, 1.01)
+    ###cmap = cm.get_cmap('nipy_spectral', 100)
+    #### arange of the following is partial setup for colorbar
+    ###CS = sub1.contourf(xval, yval, otherValues, np.arange(0, 1.01, .01),
+    ###                 cmap=cmap, norm=norm,  vmin=0, vmax=1.01)
+    ###sub1.set_xlabel('Beta')
+    ###sub1.set_ylabel('Alpha')
+    ###if titleString:
+    ###    sub1.set_title(titleString+' Other One ')
+    ###plt.colorbar(CS, )
+
+
+    #### Gravity Sum
+    ###sub3 = fig.add_subplot(gs[4:6,2:])
+    ###norm = colors.Normalize(0, 1.01)
+    ###cmap = cm.get_cmap('nipy_spectral', 100)
+    #### arange of the following is partial setup for colorbar
+    ###CS = sub3.contourf(xval, yval, otherSumValues, np.arange(0, 1.01, .01),
+    ###                 cmap=cmap, norm=norm,  vmin=0, vmax=1.01)
+    ###sub3.set_xlabel('Beta')
+    ###sub3.set_ylabel('Alpha')
+    ###if titleString:
+    ###    sub3.set_title(titleString+' Sum Other One Values')
+    ###plt.colorbar(CS, )
+
+
+    ####### Second Other One
+    #### Gravity
+    ###sub1 = fig.add_subplot(gs[6:8, 0:2])
+    ###norm = colors.Normalize(0, 1.01)
+    ###cmap = cm.get_cmap('nipy_spectral', 100)
+    #### arange of the following is partial setup for colorbar
+    ###CS = sub1.contourf(xval, yval, secondOtherValues, np.arange(0, 1.01, .01),
+    ###                 cmap=cmap, norm=norm,  vmin=0, vmax=1.01)
+    ###sub1.set_xlabel('Beta')
+    ###sub1.set_ylabel('Alpha')
+    ###if titleString:
+    ###    sub1.set_title(titleString+' Second Other One ')
+    ###plt.colorbar(CS, )
+
+
+    #### Gravity Sum
+    ###sub3 = fig.add_subplot(gs[6:8,2:])
+    ###norm = colors.Normalize(0, 1.01)
+    ###cmap = cm.get_cmap('nipy_spectral', 100)
+    #### arange of the following is partial setup for colorbar
+    ###CS = sub3.contourf(xval, yval, secondOtherSumValues, np.arange(0, 1.01, .01),
+    ###                 cmap=cmap, norm=norm,  vmin=0, vmax=1.01)
+    ###sub3.set_xlabel('Beta')
+    ###sub3.set_ylabel('Alpha')
+    ###if titleString:
+    ###    sub3.set_title(titleString+' Sum Second Other One Values')
+    ###plt.colorbar(CS, )
+
 
     # Update Change space between subplots, save image
     gs.update(wspace=1, hspace=1)

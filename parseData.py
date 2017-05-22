@@ -22,7 +22,7 @@ def parseDistance(filename):
     return matrix
 
 
-def parseEdges(filename, keys, sumValues=True, addNoise=False, deviation=0):
+def parseEdges(filename, keys, sumValues=True, errorBounds=False, addNoise=False, deviation=0):
     """ Parses Edges file into numpy matrix
 
     Takes an edge-wise file representation of data, and using a keyset
@@ -34,31 +34,77 @@ def parseEdges(filename, keys, sumValues=True, addNoise=False, deviation=0):
     value encountered will be used for each pair.
     Note: No edge-wise pair may have a value of zero
 
+    The parameter errorBounds is meant to indicate a file where the data
+    has an error range associated with it, so instead of 3 values on each
+    line there are 5, with the last two being the minimum and maximum.
+    This is meant to aid visualization, so that the calibrated model appears
+    within the limits of the confidence of the data.
+
     AddNoise parameter indicates pertubation of the dataset, that the edge
     values will be treated as the average where the std deviation is set 
     as a percentage value, 1 being 100%, of each number. 
     """
     matrix = np.zeros([len(keys), len(keys)])
+    minMatrix = np.zeros([len(keys), len(keys)])
+    maxMatrix = np.zeros([len(keys), len(keys)])
     with open(filename) as f:
         # Assuming each line is sumValues
-        for line in f:
-            place1, place2, value = line.strip().split(',')
-            ind1 = keys[place1.strip()]
-            ind2 = keys[place2.strip()]
-            # Make ind1 the smaller, upper triang matrix
-            if ind1 > ind2:
-                ind1, ind2 = ind2, ind1
-            if not sumValues and matrix[ind1][ind2] == 0:
-                if not addNoise:
-                    matrix[ind1][ind2] = float(value.strip())
-                else:
-                    matrix[ind1][ind2] = np.random.normal(float(value.strip()), deviation*float(value.strip()))
-            elif sumValues:
-                if not addNoise:
-                    matrix[ind1][ind2] += float(value.strip())
-                else:
-                    matrix[ind1][ind2] += np.random.normal(float(value.strip()), deviation*float(value.strip()))
-    return matrix
+        if not errorBounds:
+            for line in f:
+                place1, place2, value = line.strip().split(',')
+                ind1 = keys[place1.strip()]
+                ind2 = keys[place2.strip()]
+                # Make ind1 the smaller, upper triang matrix
+                if ind1 > ind2:
+                    ind1, ind2 = ind2, ind1
+                if not sumValues and matrix[ind1][ind2] == 0:
+                    if not addNoise:
+                        matrix[ind1][ind2] = float(value.strip())
+                    else:
+                        matrix[ind1][ind2] = np.random.normal(float(value.strip()), deviation*float(value.strip()))
+                elif sumValues:
+                    if not addNoise:
+                        matrix[ind1][ind2] += float(value.strip())
+                    else:
+                        matrix[ind1][ind2] += np.random.normal(float(value.strip()), deviation*float(value.strip()))
+        else:
+            for line in f:
+                place1, place2, value, minim, maxim = line.strip().split(',')
+                ind1 = keys[place1.strip()]
+                ind2 = keys[place2.strip()]
+                val = float(value.strip())
+                minim = float(minim.strip())
+                maxim = float(maxim.strip())
+                # Make ind1 the smaller, upper triang matrix
+                if ind1 > ind2:
+                    ind1, ind2 = ind2, ind1
+                if not sumValues and matrix[ind1][ind2] == 0:
+                    minMatrix[ind1][ind2] = minim
+                    maxMatrix[ind1][ind2] = maxim
+                    if not addNoise:
+                        matrix[ind1][ind2] = val
+                    else:
+                        matrix[ind1][ind2] = np.random.normal(val, deviation*val)
+                elif sumValues:
+                    minMatrix[ind1][ind2] += minim
+                    maxMatrix[ind1][ind2] += maxim
+                    if not addNoise:
+                        matrix[ind1][ind2] += val
+                    else:
+                        matrix[ind1][ind2] += np.random.normal(val, deviation*val)
+            # Check the matrix, if min or max are 0, replace with the value in matrix
+            #  as this would mean have 0 error on data (from Ferry set)
+            for i in range(len(matrix)):
+                for j in range(len(matrix[0])):
+                    if matrix[i][j] != 0:
+                        if minMatrix[i][j] == 0:
+                            minMatrix[i][j] = matrix[i][j]
+                        if maxMatrix[i][j] == 0:
+                            maxMatrix[i][j] = matrix[i][j]
+    if not errorBounds:
+        return matrix
+    else:
+        return matrix, minMatrix, maxMatrix
 
 
 def makeKeys(filename):
