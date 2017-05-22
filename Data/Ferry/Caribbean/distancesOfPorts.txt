@@ -1,0 +1,60 @@
+AG: Barbuda (Barbuda),AG: St. Johns (Antigua),56.0774263605
+AG: St. Johns (Antigua),G: Basse-Terre (Guadeloupe),124.57779851
+AG: St. Johns (Antigua),GB: Montserrat (Montserrat),6468.91038695
+BR: Angra dos Reis,BR: Ilha Grande (Ilha Grande),2254.98494651
+BR: Ilha Grande (Ilha Grande),BR: Mangaratiba,2244.69097909
+BS: Bimini (Bimini),USA: Miami,92.0239938199
+BS: Cat Island (Cat Island),BS: Nassau (New Providence),221.461588828
+BS: Elbow Cay (Elbow Cay),BS: Marsh Harbour (Great Abaco),12.1670304173
+BS: Freeport (Grand Bahama),BS: Nassau (New Providence),210.260139177
+BS: Freeport (Grand Bahama),BS: Sandy Point (Great Abaco),139.250560034
+BS: Freeport (Grand Bahama),USA: Fort Lauderdale,155.701742726
+BS: Nassau (New Providence),BS: Rock Sound (Eleuthera),122.074523532
+BS: Nassau (New Providence),BS: Sandy Point (Great Abaco),106.679723365
+BVI: Anegada (Anegada),BVI: Road Town (Tortola),44.075683944
+BVI: Beef Island (Tortola),BVI: Spanish Town (Virgin Gorda),11.2725064175
+BVI: Road Town (Tortola),BVI: Spanish Town (Virgin Gorda),19.9647027507
+BVI: Road Town (Tortola),USVI: Red Hook (St Thomas),27.1257074988
+BVI: West End (Tortola),USVI: Red Hook (St Thomas),16.0503468111
+BZ: Belize City,BZ: Caye Caulker (Caye Caulker),33.6353948583
+BZ: Caye Caulker (Caye Caulker),MEX: Chetumal,86.8787387166
+BZ: Punta Gorda,GT: Puerto Barrios,50.8352964996
+C: Havana,USA: Fort Lauderdale,403.107474809
+C: Havana,USA: Key West,170.920446876
+C: Havana,USA: Miami,367.409832261
+CR: Golfito,CR: Puerto Jimenez,22.646698627
+CR: Paquera,CR: Puntaarenas,187.349083749
+CR: Playa Naranjo,CR: Puntaarenas,310.359789159
+G: Basse-Terre (Guadeloupe),GB: Montserrat (Montserrat),6562.36972668
+G: Point-a-Pitre (Guadeloupe),G: Saint-Louis (Marie-Galante),39.1066748193
+G: Point-a-Pitre (Guadeloupe),WD: Roseau (Dominica),104.499413431
+G: Point-a-Pitre (Guadeloupe),WL: Castries (St. Lucia),254.388303964
+HN: Amapala (Isla del Tigre),HN: Coyolito,3.88957827396
+HN: La Ceiba,HN: Roatan (Roatan Island),67.3664620578
+KAN: Basseterre (St. Kitts),KAN: Charlestown (Nevis),20.888324732
+MEX: Guaymas,MEX: Santa Rosalia,148.790237713
+MEX: La Paz,MEX: Topolobampo,206.031580476
+RA: Buenos Aires,RA: Tigre,26.8870514485
+RA: Buenos Aires,ROU: Carmelo,68.1622471405
+RA: Buenos Aires,ROU: Colonia,80.0920411382
+RA: Buenos Aires,ROU: La Paloma,383.924467528
+RA: Buenos Aires,ROU: Montevideo,205.097217636
+RA: Buenos Aires,ROU: Piriapolis,285.470737868
+RA: Buenos Aires,ROU: Punta del Este,317.388722767
+RA: Tigre,ROU: Carmelo,54.8418382987
+RA: Tigre,ROU: Montevideo,226.989438922
+RA: Ushuaia,RCH: Puerto Williams,46.9739665799
+RCH: Ayacara,RCH: Puerto Montt,95.0517207071
+RCH: Caleta Tortel,RCH: Puerto Natales,443.350026732
+RCH: Caleta Tortel,RCH: Puerto Yungay,1192.9268853
+RCH: Cisnes,RCH: Puerto Chacabuco,79.8052808568
+RCH: Cisnes,RCH: Raul Marin,1265.98323176
+RCH: Puerto Chacabuco,RCH: Puerto Montt,443.976135504
+RCH: Puerto Chacabuco,RCH: Raul Marin,1345.75993316
+RCH: Puerto Montt,RCH: Puerto Natales,1140.85985827
+RCH: Puerto Natales,RCH: Puerto Yungay,1623.8590243
+RH: Anse a Galets (La Gonâve),RH: Cariesse,26.3502949903
+TD: Port of Spain (Trinidad),TD: San Fernando (Trinidad),40.8897426522
+TD: Port of Spain (Trinidad),TD: Scarborough (Tobago),102.894889629
+USVI: Cruz Bay (St John),USVI: Red Hook (St Thomas),6.15726918782
+WD: Roseau (Dominica),WL: Castries (St. Lucia),150.379987256
