@@ -255,3 +255,4 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadData, retExample=False):
         return [slopeValues, interceptValues, r2values, exampleRow]
     else:
         return [slopeValues, interceptValues, r2values]
+

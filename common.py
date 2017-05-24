@@ -25,7 +25,10 @@ deleteFromOriginalNetworkSum = False
 gravitySumDistThresh = 300
 gravitySumDistThreshMinimum = 0
 automaticBestMatch = True
+contributionSplit = False
 #### End
+otherOneName = "Common Part of Commuters"
+secondOtherOneName = "Normalized root mean square error"
 
 def alphaIterate():
     return np.arange(alphaMin, alphaMax, stepValueAlpha)
@@ -46,11 +49,31 @@ def formatScientific(x):
 def otherOne(pred, meas):
     """ Another measure of fit for the data
 
+    Common Part of Commuters
+    CPC(T,T') = (2*Sum_i_j (min(T_i_j,T'_i_j)))/((Sum_i_j T_i_J) + (Sum_i_j T'_i_j))
+    where T is observed data, T' is estimated data, T_i_j is the traffic between i, j
+
+    Return: Has a value which scales from 0 to 1
+
     """
-    return .9
+    mins = [min(x,y) for x,y in zip(pred, meas)]
+    return 2*sum(mins)/(sum(pred) + sum(meas))
+
 
 def otherTwo(pred, meas):
-    return .6
+    """ Another measure of fit for the data
+
+    Normalized root mean square error
+    NRMSE(T,T') = sqrt((Sum_i_j ((T_i_j - T'_i_j)^2) )/N)*1/T_avg
+    N: Number of data points
+    T_avg: Average trip value
+
+    """
+    n = float(len(meas))
+    t_avg = sum(meas)/n
+    differences = [(x-y)**2 for x,y in zip(meas, pred)]
+    return math.sqrt(sum(differences)/n)/t_avg
+
 
 def rSquared(pred, meas):
     """ Calculate r^2 value.
@@ -138,11 +161,10 @@ def plotBoth(roadDataList, z, otherValues, secondOtherValues, slope, intercept, 
 
     xval = betaIterate()
     yval = alphaIterate()
-    fig = plt.figure(figsize=(10, 10), dpi=200)
-    #fig = plt.figure(figsize=(10, 15), dpi=300)
-    #fig.set_size_inches(5, 5)
-    #gs = gridspec.GridSpec(8, 4)
-    gs = gridspec.GridSpec(4, 4)
+    #fig = plt.figure(figsize=(10, 10), dpi=200)
+    fig = plt.figure(figsize=(10, 15), dpi=300)
+    gs = gridspec.GridSpec(8, 4)
+    #gs = gridspec.GridSpec(4, 4)
 
     #### First Row Option 1: Single large boxplot
     #box1 = fig.add_subplot(gs[0,:])
@@ -177,7 +199,7 @@ def plotBoth(roadDataList, z, otherValues, secondOtherValues, slope, intercept, 
             rowExampleSumGravity_sorted += [x[0]]
             minimData_sum_sorted += [x[1]]
             maximData_sum_sorted += [x[2]]
-        
+
 
     #### First Row Option 2: Gravity plot and GravitySums plot
     if not rowExampleGravity:
@@ -226,8 +248,8 @@ def plotBoth(roadDataList, z, otherValues, secondOtherValues, slope, intercept, 
         ####  GRAVITY Plot
         scatter = fig.add_subplot(gs[0:2, 0:2])
         alphaBestInd, betaBestInd, bestR2 = matrixMaximum(z)
-        alphaInd = alphaBestInd*stepValueAlpha - alphaMin
-        betaInd = betaBestInd*stepValueBeta - betaMin
+        alphaInd = alphaBestInd*stepValueAlpha + alphaMin
+        betaInd = betaBestInd*stepValueBeta + betaMin
         m = slope[alphaBestInd][betaBestInd]
         b = intercept[alphaBestInd][betaBestInd]
         predictions = [x*m + b for x in rowExampleGravity]
@@ -248,8 +270,8 @@ def plotBoth(roadDataList, z, otherValues, secondOtherValues, slope, intercept, 
         ####  GRAVITY SUMS Plot
         scatter = fig.add_subplot(gs[0:2, 2:])
         alphaSumsBestInd, betaSumsBestInd, bestSumR2 = matrixMaximum(zSum)
-        alphaInd = alphaSumsBestInd*stepValueAlpha - alphaMin
-        betaInd = betaSumsBestInd*stepValueBeta - betaMin
+        alphaInd = alphaSumsBestInd*stepValueAlpha + alphaMin
+        betaInd = betaSumsBestInd*stepValueBeta + betaMin
         m = slopeSum[alphaSumsBestInd][betaSumsBestInd]
         b = interceptSum[alphaSumsBestInd][betaSumsBestInd]
         predictions = [x*m + b for x in rowExampleSumGravity]
@@ -298,63 +320,60 @@ def plotBoth(roadDataList, z, otherValues, secondOtherValues, slope, intercept, 
     plt.colorbar(CS, )
 
 
-
-    ####### Other one
-    #### Gravity
-    ###sub1 = fig.add_subplot(gs[4:6, 0:2])
-    ###norm = colors.Normalize(0, 1.01)
-    ###cmap = cm.get_cmap('nipy_spectral', 100)
-    #### arange of the following is partial setup for colorbar
-    ###CS = sub1.contourf(xval, yval, otherValues, np.arange(0, 1.01, .01),
-    ###                 cmap=cmap, norm=norm,  vmin=0, vmax=1.01)
-    ###sub1.set_xlabel('Beta')
-    ###sub1.set_ylabel('Alpha')
-    ###if titleString:
-    ###    sub1.set_title(titleString+' Other One ')
-    ###plt.colorbar(CS, )
-
-
-    #### Gravity Sum
-    ###sub3 = fig.add_subplot(gs[4:6,2:])
-    ###norm = colors.Normalize(0, 1.01)
-    ###cmap = cm.get_cmap('nipy_spectral', 100)
-    #### arange of the following is partial setup for colorbar
-    ###CS = sub3.contourf(xval, yval, otherSumValues, np.arange(0, 1.01, .01),
-    ###                 cmap=cmap, norm=norm,  vmin=0, vmax=1.01)
-    ###sub3.set_xlabel('Beta')
-    ###sub3.set_ylabel('Alpha')
-    ###if titleString:
-    ###    sub3.set_title(titleString+' Sum Other One Values')
-    ###plt.colorbar(CS, )
+    #
+    #
+    #### Other one
+    # Gravity
+    sub1 = fig.add_subplot(gs[4:6, 0:2])
+    norm = colors.Normalize(0, 1.01)
+    cmap = cm.get_cmap('nipy_spectral', 100)
+    # arange of the following is partial setup for colorbar
+    CS = sub1.contourf(xval, yval, otherValues, np.arange(0, 1.01, .01),
+                     cmap=cmap, norm=norm,  vmin=0, vmax=1.01)
+    sub1.set_xlabel('Beta')
+    sub1.set_ylabel('Alpha')
+    if titleString:
+        sub1.set_title(titleString+" {} ".format(otherOneName))
+    plt.colorbar(CS, )
 
 
-    ####### Second Other One
-    #### Gravity
-    ###sub1 = fig.add_subplot(gs[6:8, 0:2])
-    ###norm = colors.Normalize(0, 1.01)
-    ###cmap = cm.get_cmap('nipy_spectral', 100)
-    #### arange of the following is partial setup for colorbar
-    ###CS = sub1.contourf(xval, yval, secondOtherValues, np.arange(0, 1.01, .01),
-    ###                 cmap=cmap, norm=norm,  vmin=0, vmax=1.01)
-    ###sub1.set_xlabel('Beta')
-    ###sub1.set_ylabel('Alpha')
-    ###if titleString:
-    ###    sub1.set_title(titleString+' Second Other One ')
-    ###plt.colorbar(CS, )
+    # Gravity Sum
+    sub3 = fig.add_subplot(gs[4:6,2:])
+    norm = colors.Normalize(0, 1.01)
+    cmap = cm.get_cmap('nipy_spectral', 100)
+    # arange of the following is partial setup for colorbar
+    CS = sub3.contourf(xval, yval, otherSumValues, np.arange(0, 1.01, .01),
+                     cmap=cmap, norm=norm,  vmin=0, vmax=1.01)
+    sub3.set_xlabel('Beta')
+    sub3.set_ylabel('Alpha')
+    if titleString:
+        sub3.set_title(titleString+" Sum {}".format(otherOneName))
+    plt.colorbar(CS, )
 
 
-    #### Gravity Sum
-    ###sub3 = fig.add_subplot(gs[6:8,2:])
-    ###norm = colors.Normalize(0, 1.01)
-    ###cmap = cm.get_cmap('nipy_spectral', 100)
-    #### arange of the following is partial setup for colorbar
-    ###CS = sub3.contourf(xval, yval, secondOtherSumValues, np.arange(0, 1.01, .01),
-    ###                 cmap=cmap, norm=norm,  vmin=0, vmax=1.01)
-    ###sub3.set_xlabel('Beta')
-    ###sub3.set_ylabel('Alpha')
-    ###if titleString:
-    ###    sub3.set_title(titleString+' Sum Second Other One Values')
-    ###plt.colorbar(CS, )
+    #### Second Other One
+    # Gravity
+    sub1 = fig.add_subplot(gs[6:8, 0:2])
+    cmap = cm.get_cmap('nipy_spectral', 100)
+    # arange of the following is partial setup for colorbar
+    CS = sub1.contourf(xval, yval, secondOtherValues, cmap=cmap)
+    sub1.set_xlabel('Beta')
+    sub1.set_ylabel('Alpha')
+    if titleString:
+        sub1.set_title(titleString+" {}".format(secondOtherOneName))
+    plt.colorbar(CS, )
+
+
+    # Gravity Sum
+    sub3 = fig.add_subplot(gs[6:8,2:])
+    cmap = cm.get_cmap('nipy_spectral', 100)
+    # arange of the following is partial setup for colorbar
+    CS = sub3.contourf(xval, yval, secondOtherSumValues, cmap=cmap)
+    sub3.set_xlabel('Beta')
+    sub3.set_ylabel('Alpha')
+    if titleString:
+        sub3.set_title(titleString+" Sum {}".format(secondOtherOneName))
+    plt.colorbar(CS, )
 
 
     # Update Change space between subplots, save image

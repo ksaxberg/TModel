@@ -1,3 +1,9 @@
-Filtered the master file of port to port listings into country to country sums. Pulled the population data from Wikipedia, referencing Country Censuses as well as UN projections.
+This dataset represents the annual passenger count exchange on Ferry boats in
+the Caribbean. Two range values are also given, one representing maximum
+potential flow values, and one representing a 50% confidence interval on each
+port to port connection, the sum of which still provides a wide range of
+potential values.
 
-Distances in KM, pulled from distancefromto.net
+
+Population options are from the sum of port populations, or the population
+of the entire country.

@@ -1,3 +1,0 @@
-Filtered the master file of port to port listings into country to country sums. Pulled the population data from Wikipedia, referencing Country Censuses as well as UN projections.
-
-Distances in KM, pulled from distancefromto.net
