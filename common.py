@@ -8,7 +8,7 @@ from decimal import Decimal
 import numpy as np
 import math
 
-#### Parameters for manipulation
+#### Parameters for manipulation, explanation in ReadMe
 DEBUG = False
 alphaMin = 0.1
 alphaMax = 2
@@ -26,7 +26,9 @@ gravitySumDistThresh = 300
 gravitySumDistThreshMinimum = 0
 automaticBestMatch = True
 contributionSplit = False
+useErrorBound = False
 #### End
+
 otherOneName = "Common Part of Commuters"
 secondOtherOneName = "Normalized root mean square error"
 

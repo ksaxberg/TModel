@@ -52,6 +52,6 @@ def gravityOnEverything(pop, keys, distMatrix, distList, roadDataList, retExampl
             secondOtherValues[i][j]=secondOtherValue
 
     if retExample:
-        return [slopeValues, interceptValues, r2values, otherValues, secondOtherValues,exampleRow]
+        return [slopeValues, interceptValues, r2values, otherValues, secondOtherValues, exampleRow]
     else:
         return [slopeValues, interceptValues, r2values, otherValues, secondOtherValues ]
