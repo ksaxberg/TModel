@@ -4,6 +4,13 @@ potential flow values, and one representing a 50% confidence interval on each
 port to port connection, the sum of which still provides a wide range of
 potential values.
 
+The passenger count value stems not from the "measured" value category,
+but instead entirely from the estimated passenger count. The "measured" values
+lie within the range of the estimated count, and so if the calibrated fit lies
+within the newly expanded range, this should be a positive sign.
 
 Population options are from the sum of port populations, or the population
 of the entire country.
+
+Note on results:
+R^2 correlation is poor for all variations, the highest being around .32

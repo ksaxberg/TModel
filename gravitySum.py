@@ -144,6 +144,9 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadData, retExample=False):
     # Helper function for gravity calculation
     def convertRoutesToList(overlaps, pops, beta, alpha):
         # Constant factor K will have to be multiplied on the size
+        # Calculate Counts regardless if we use it, minor addition
+        counts = np.ones([len(overlaps), len(overlaps)])
+        counts *= -1
         partialGravities = np.ones([len(overlaps), len(overlaps)])
         partialGravities *= -1
         for i, row in enumerate(overlaps):
@@ -153,11 +156,12 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadData, retExample=False):
                 else:
                     # Reset to zero if have values to add
                     partialGravities[i][j] = 0
+                    counts[i][j] = len(col)
                 for x in col:
                     # For each x, add the partial gravity
                     # x = [[A, B], distance]
                     partialGravities[i][j] += ((pops[x[0][0]][0]*pops[x[0][1]][0])**alpha)/(x[1]**beta)
-        return [x for x in partialGravities.flat if x != -1]
+        return [x for x in partialGravities.flat if x != -1], [z for z in counts.flat if z != -1]
 
     # Making the distance matrix symmetric
     # Should already be upper triangular,
@@ -183,9 +187,9 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadData, retExample=False):
     exampleRow = []
     for i, alpha in enumerate(common.alphaIterate()):
         for j, beta in enumerate(common.betaIterate()):
-            partialList = convertRoutesToList(overlap, pop, beta, alpha)
+            partialList, counts = convertRoutesToList(overlap, pop, beta, alpha)
 
-            slope, intercept, r2, otherValue, secondOtherValue= common.singleRegressionPlus(partialList, roadDataList)
+            slope, intercept, r2, otherValue, secondOtherValue = common.singleRegressionPlus(partialList, roadDataList, counts=counts[:]) if common.contributionSplit else  common.singleRegressionPlus(partialList, roadDataList)
             if retExample:
                 if not common.automaticBestMatch:
                     if np.isclose(alpha, common.alphaSumExample) and np.isclose(beta, common.betaSumExample):
@@ -201,6 +205,6 @@ def gravitySumOnEverything(pop, keys, distMatrix, roadData, retExample=False):
             otherValues[i][j]=otherValue
             secondOtherValues[i][j]=secondOtherValue
     if retExample:
-        return [slopeValues, interceptValues, r2values,otherValues, secondOtherValues, exampleRow]
+        return [slopeValues, interceptValues, r2values,otherValues, secondOtherValues, exampleRow, None] if not (common.useGravitySumThresh and common.deleteFromOriginalNetworkSum) else [slopeValues, interceptValues, r2values,otherValues, secondOtherValues, exampleRow, roadDataList]
     else:
         return [slopeValues, interceptValues, otherValues, secondOtherValues, r2values]

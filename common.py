@@ -91,7 +91,7 @@ def rSquared(pred, meas):
     return 1-sqrError/meanError
 
 
-def linRegress(x, y):
+def linRegress(x, y, counts=None):
     """ Calculate the regression of x, y
 
     Uses numpy's linalg.lstsq method to calculate a regression, returning
@@ -100,36 +100,52 @@ def linRegress(x, y):
     x_values = np.array(x)
     y_values = np.array(y)
     #if DEBUG: print("x length: {}\ny length: {}\n".format(len(x), len(y)))
-    A = np.vstack([x_values, np.ones(len(x_values))]).T
+    if DEBUG and counts: print("counts is: {}".format(counts))
+    A = np.vstack([x_values, np.ones(len(x_values))]).T if counts==None else np.vstack([x_values, counts]).T
     slope, intercept = np.linalg.lstsq(A, y_values)[0]
     return slope, intercept
 
 
-def singleRegression(x, y):
+def singleRegression(x, y, counts=None):
     """
     Runs through a single regression, returning slope, intercept, r2
+
+    Takes out a common scaling factor from all the data, reducing
+    numerical errors at very large values (due to alpha, beta ranges)
+
+    Potentially adjusts the linear regression, instead of using vector
+    made of [x 1], uses vector [x c] where c is dependent on the number of
+    routes that overlap on that segment.
     """
     #slope, intercept = linRegress(x, y)
     #predicted = [slope*i + intercept for i in x]
     #r2 = rSquared(predicted, y)
     #return slope, intercept, r2
+
     expForFactor = math.floor(min([math.log(abs(i), 10) for i in x]))
     factor = 1/(10**expForFactor)
     adjust = [factor*i for i in x]
-    slope, intercept = linRegress(adjust, y)
+    # If using counts, ie moving the constant term to each route instead of
+    #  calculating the constant term after having summed the routes
+    slope, intercept = linRegress(adjust, y, counts=counts)
     predicted = [slope*i + intercept for i in adjust]
     r2 = rSquared(predicted, y)
     return (slope*factor), intercept, r2
 
 
-def singleRegressionPlus(x, y):
+
+def singleRegressionPlus(x, y, counts=None):
     """
     Runs through a single regression, returning slope, intercept, r2
     """
+    if not x:
+        raise ValueError("Regressing on empty list, perhaps you filtered all the road segments out?")
     expForFactor = math.floor(min([math.log(abs(i), 10) for i in x]))
     factor = 1/(10**expForFactor)
     adjust = [factor*i for i in x]
-    slope, intercept = linRegress(adjust, y)
+    # If using counts, ie moving the constant term to each route instead of
+    #  calculating the constant term after having summed the routes
+    slope, intercept = linRegress(adjust, y, counts=counts)
     predicted = [slope*i + intercept for i in adjust]
     r2 = rSquared(predicted, y)
     otherValue = otherOne(predicted, y)
@@ -152,7 +168,7 @@ def matrixMaximum(matrix):
     return rowSoFar, colSoFar, maxSoFar
 
 
-def plotBoth(roadDataList, z, otherValues, secondOtherValues, slope, intercept, zSum, otherSumValues, secondOtherSumValues, slopeSum, interceptSum, name="img", titleString="", rowExampleGravity=[], rowExampleSumGravity=[], useRange=False, rangeData=([],[])):
+def plotBoth(roadDataList, z, otherValues, secondOtherValues, slope, intercept, zSum, otherSumValues, secondOtherSumValues, slopeSum, interceptSum, name="img", titleString="", rowExampleGravity=[], rowExampleSumGravity=[], useRange=False, rangeData=([],[]), roadDataList_EdgeRemove=None):
     """ Makes four countour plots, box plot and saves to the specified filename
 
     File will be saved into current directory as a png, input matrix z must
@@ -236,7 +252,10 @@ def plotBoth(roadDataList, z, otherValues, secondOtherValues, slope, intercept, 
         scatter.scatter(rowExampleSumGravity, predictions, c='b', marker='x', label="predictions")
         scatter.scatter(rowExampleSumGravity, predictions_noInt, c='g', marker='+', alpha = 0.5, label="predictions without intercept")
         if not useRange:
-            scatter.scatter(rowExampleSumGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+            if useGravitySumThresh and deleteFromOriginalNetworkSum:
+                scatter.scatter(rowExampleSumGravity, roadDataList_EdgeRemove, c='r', marker='+', alpha=0.3, label="actual")
+            else:
+                scatter.scatter(rowExampleSumGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
         else:
             scatter.scatter(rowExampleSumGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
             scatter.fill_between(rowExampleSumGravity_sorted, minimData_sum_sorted, maximData_sum_sorted, facecolor='red', alpha=0.1)
@@ -281,7 +300,10 @@ def plotBoth(roadDataList, z, otherValues, secondOtherValues, slope, intercept, 
         scatter.scatter(rowExampleSumGravity, predictions, c='b', marker='x', label="predictions")
         scatter.scatter(rowExampleSumGravity, predictions_noInt, c='g', marker='+', alpha = 0.5, label="predictions without intercept")
         if not useRange:
-            scatter.scatter(rowExampleSumGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
+            if useGravitySumThresh and deleteFromOriginalNetworkSum:
+                scatter.scatter(rowExampleSumGravity, roadDataList_EdgeRemove, c='r', marker='+', alpha=0.3, label="actual")
+            else:
+                scatter.scatter(rowExampleSumGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
         else:
             scatter.scatter(rowExampleSumGravity, roadDataList, c='r', marker='+', alpha=0.3, label="actual")
             scatter.fill_between(rowExampleSumGravity_sorted, minimData_sum_sorted, maximData_sum_sorted, facecolor='red', alpha=0.1)
